@@ -1,0 +1,2 @@
+ALTER TABLE e4l_id_conv
+    ADD COLUMN user_id FOREIGN KEY REFERENCES user(id);
