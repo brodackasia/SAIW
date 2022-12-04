@@ -7,12 +7,9 @@ namespace App\Controller;
 use App\Service\HRService;
 use DateTime;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\HttpFoundation\Exception\BadRequestException;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\Validator\Constraints\Date;
-use Symfony\Component\Validator\Constraints\Time;
 
 #[Route('/hr')]
 class HRController extends AbstractController
@@ -26,11 +23,35 @@ class HRController extends AbstractController
 
     //CURRENT
     #[Route('/current/{type}', name: 'hr.current', methods: ['GET'])]
-    public function currentHr(string $type): Response
+    public function currentHr(Request $request, string $type): Response
     {
+        $patientId = $request->query->get('patientId');
+
+        //wywolanie funkcji walidacji x2
+        if (
+            $this->patientIdValidation((int)($patientId)) === false
+        ) {
+            return new Response(
+                'Invalid parameter "patientId"!',
+                Response::HTTP_BAD_REQUEST
+            );
+        }
+
         return new Response(
-            (string) $this->HRService->getCurrentHR($type)
+            (string)$this->HRService->getCurrentHR($type, (int)$patientId)
         );
+    }
+
+    //WALIDACJA
+    public function patientIdValidation(int $patientId): bool
+    {
+        if (
+            is_null($patientId)
+            || !is_numeric($patientId)
+        )
+           return false;
+        else
+            return true;
     }
 
     //WALIDACJA
@@ -53,24 +74,34 @@ class HRController extends AbstractController
     public function minimumHr(Request $request, string $type): Response
     {
         //pobieranie parametru z requestu
+        $patientId = $request->query->get('patientId');
         $from = $request->query->get('from');
         $to = $request->query->get('to');
 
-        //jesli true to git jesli false to response zwrocic
+        //wywolanie funkcji walidacji x2
+        if (
+            $this->patientIdValidation((int)($patientId)) === false
+        ) {
+            return new Response(
+                'Invalid parameter "patientId"!',
+                Response::HTTP_BAD_REQUEST
+            );
+        }
+
         if (
             $this->fromAndToValidation($from, $to) === false
-        ){
+        ) {
             return new Response(
-            'Invalid parameter "from" or "to"!',
-            Response::HTTP_BAD_REQUEST
-        );
+                'Invalid parameter "from" or "to"!',
+                Response::HTTP_BAD_REQUEST
+            );
         }
 
         $to = DateTime::createFromFormat('Y-m-d H:i:s', $to);
         $from = DateTime::createFromFormat('Y-m-d H:i:s', $from);
 
         return new Response(
-            (string) $this->HRService->getMinimumHR($type, $from, $to)
+            (string) $this->HRService->getMinimumHR($type, $from, $to, (int)$patientId)
         );
     }
 
@@ -79,10 +110,20 @@ class HRController extends AbstractController
     public function maximumHr(Request $request, string $type): Response
     {
         //pobieranie parametru z requestu
+        $patientId = $request->query->get('patientId');
         $from = $request->query->get('from');
         $to = $request->query->get('to');
 
-        //jesli true to git jesli false to response zwrocic
+        //wywolanie funkcji walidacji x2
+        if (
+            $this->patientIdValidation((int)($patientId)) === false
+        ) {
+            return new Response(
+                'Invalid parameter "patientId"!',
+                Response::HTTP_BAD_REQUEST
+            );
+        }
+
         if (
             $this->fromAndToValidation($from, $to) === false
         ){
@@ -96,7 +137,7 @@ class HRController extends AbstractController
         $from = DateTime::createFromFormat('Y-m-d H:i:s', $from);
 
         return new Response(
-            (string) $this->HRService->getMaximumHR($type, $from, $to)
+            (string) $this->HRService->getMaximumHR($type, $from, $to, (int)$patientId)
         );
     }
 
@@ -105,10 +146,20 @@ class HRController extends AbstractController
     public function averageHr(Request $request, string $type): Response
     {
         //pobieranie parametru z requestu
+        $patientId = $request->query->get('patientId');
         $from = $request->query->get('from');
         $to = $request->query->get('to');
 
-        //jesli true to git jesli false to response zwrocic
+        //wywolanie funkcji walidacji x2
+        if (
+            $this->patientIdValidation((int)($patientId)) === false
+        ) {
+            return new Response(
+                'Invalid parameter "patientId"!',
+                Response::HTTP_BAD_REQUEST
+            );
+        }
+
         if (
             $this->fromAndToValidation($from, $to) === false
         ){
@@ -122,8 +173,7 @@ class HRController extends AbstractController
         $from = DateTime::createFromFormat('Y-m-d H:i:s', $from);
 
         return new Response(
-            (string) $this->HRService->getAverageHR($type, $from, $to)
+            (string) $this->HRService->getAverageHR($type, $from, $to, (int)$patientId)
         );
     }
-
 }

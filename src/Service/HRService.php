@@ -16,23 +16,23 @@ class HRService
         $this->HRRepository = $HRRepository;
     }
 
-    public function getCurrentHR(string $type): ?int
+    public function getCurrentHR(string $type, int $patientId): ?int
     {
-        return $this->HRRepository->getCurrentHR($type);
+        return $this->HRRepository->getCurrentHR($type, $patientId);
     }
 
-    public function getMinimumHR(string $type, DateTime $from, DateTime $to): int
+    public function getMinimumHR(string $type, DateTime $from, DateTime $to, int $userId): int
     {
-        return $this->HRRepository->getMinimumHR( $type, $from, $to);
+        return $this->HRRepository->getMinimumHR( $type, $userId, $from, $to);
     }
 
-    public function getMaximumHR(string $type, DateTime $from, DateTime $to): int
+    public function getMaximumHR(string $type, DateTime $from, DateTime $to, int $userId): int
     {
-        return $this->HRRepository->getMaximumHR($type, $from, $to);
+        return $this->HRRepository->getMaximumHR($type, $userId, $from, $to);
     }
 
-    public function getAverageHR(string $type, DateTime $from, DateTime $to): int
+    public function getAverageHR(string $type, DateTime $from, DateTime $to, int $userId): int
     {
-        return $this->HRRepository->getAverageHR($type, $from, $to);
+        return $this->HRRepository->getAverageHR($type, $userId, $from, $to);
     }
 }

@@ -20,3 +20,13 @@ create table bathtub_measurements
     HOST varchar(15),
     TYPE varchar(10)
 );
+
+CREATE TABLE patient
+(
+    id int primary key,
+    name varchar(30) not null,
+    surname varchar (50) not null,
+    email varchar (50),
+    phone_number varchar (10)
+);
+
