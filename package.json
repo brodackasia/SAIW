@@ -20,6 +20,10 @@
         "build": "encore production --progress"
     },
     "dependencies": {
+        "bootswatch": "^5.2.2",
+        "chart.js": "^4.0.1",
+        "contrast-color": "^1.0.1",
+        "jquery": "^3.6.1",
         "vue": "^3.2.45",
         "vue-loader": "^17.0.1",
         "vue-template-compiler": "^2.7.14"
