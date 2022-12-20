@@ -1,6 +1,7 @@
 {% extends 'base.html.twig' %}
 
 {% block body %}
+    <div id="data" data-patients="{{ patients|json_encode()  }}">
     <div id="app">
         <App />
     </div>

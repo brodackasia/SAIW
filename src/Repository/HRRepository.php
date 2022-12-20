@@ -6,6 +6,8 @@ namespace App\Repository;
 
 use App\Database\Connection;
 use DateTime;
+use PDO;
+use Symfony\Component\Validator\Constraints\Date;
 
 class HRRepository
 {
@@ -14,6 +16,63 @@ class HRRepository
     public function __construct(Connection $db)
     {
         $this->db = $db;
+    }
+
+    //CHART
+    public function getChartHR(string $type, int $patientId, DateTime $from, DateTime $to): array
+    {
+        if($type === 'chair') {
+            $statement = $this->db->prepare(<<<SQL
+                SELECT
+                    chm.hr,
+                    chm."time"
+                FROM
+                    patient AS p
+                INNER JOIN
+                    e4l_id_conv AS h on p.id = h.patient_id
+                INNER JOIN
+                    chair_measurements AS chm ON chm.host = h.hub
+                        AND time AT TIME ZONE 'UTC-1' between :dateTimeFrom AND :dateTimeTo
+                WHERE
+                    p.id = :patientId
+                ORDER BY
+                    chm.id DESC
+        SQL);
+
+            $statement->execute([
+                'patientId' => $patientId,
+                'dateTimeFrom' => $from->format('Y-m-d H:i'),
+                'dateTimeTo' => $to->format('Y-m-d H:i'),
+            ]);
+
+            return $statement->fetchAll(PDO::FETCH_ASSOC);
+        }
+        else if($type === 'bathtub') {
+            $statement = $this->db->prepare(<<<SQL
+                SELECT
+                    bm.hr,
+                    TO_CHAR(bm."time", 'yyyy-mm-dd hh:mi') AS time
+                FROM
+                    patient AS p
+                INNER JOIN
+                    e4l_id_conv AS h on p.id = h.patient_id
+                INNER JOIN
+                    bathtub_measurements AS bm ON bm.host = h.hub
+                        AND time AT TIME ZONE 'UTC-1' between :dateTimeFrom AND :dateTimeTo
+                WHERE
+                    p.id = :patientId
+                ORDER BY
+                    bm.id DESC
+        SQL);
+
+            $statement->execute([
+                'patientId' => $patientId,
+                'dateTimeFrom' => $from->format('Y-m-d H:i'),
+                'dateTimeTo' => $to->format('Y-m-d H:i'),
+            ]);
+
+            return $statement->fetchAll(PDO::FETCH_ASSOC);
+        }
     }
 
     //CURRENT
@@ -92,8 +151,8 @@ class HRRepository
 
             $statement->execute([
                 'patientId' => $patientId,
-                'dateTimeFrom' => $from->format('Y-m-d H:i:s'),
-                'dateTimeTo' => $to->format('Y-m-d H:i:s'),
+                'dateTimeFrom' => $from->format('Y-m-d H:i'),
+                'dateTimeTo' => $to->format('Y-m-d H:i'),
             ]);
 
             return $statement->fetchColumn();
@@ -118,8 +177,8 @@ class HRRepository
 
             $statement->execute([
                 'patientId' => $patientId,
-                'dateTimeFrom' => $from->format('Y-m-d H:i:s'),
-                'dateTimeTo' => $to->format('Y-m-d H:i:s'),
+                'dateTimeFrom' => $from->format('Y-m-d H:i'),
+                'dateTimeTo' => $to->format('Y-m-d H:i'),
             ]);
 
             return $statement->fetchColumn();
@@ -149,8 +208,8 @@ class HRRepository
 
             $statement->execute([
                 'patientId' => $patientId,
-                'dateTimeFrom' => $from->format('Y-m-d H:i:s'),
-                'dateTimeTo' => $to->format('Y-m-d H:i:s'),
+                'dateTimeFrom' => $from->format('Y-m-d H:i'),
+                'dateTimeTo' => $to->format('Y-m-d H:i'),
             ]);
 
             return $statement->fetchColumn();
@@ -175,8 +234,8 @@ class HRRepository
 
             $statement->execute([
                 'patientId' => $patientId,
-                'dateTimeFrom' => $from->format('Y-m-d H:i:s'),
-                'dateTimeTo' => $to->format('Y-m-d H:i:s'),
+                'dateTimeFrom' => $from->format('Y-m-d H:i'),
+                'dateTimeTo' => $to->format('Y-m-d H:i'),
             ]);
 
             return $statement->fetchColumn();
@@ -204,8 +263,8 @@ class HRRepository
 
             $statement->execute([
                 'patientId' => $patientId,
-                'dateTimeFrom' => $from->format('Y-m-d H:i:s'),
-                'dateTimeTo' => $to->format('Y-m-d H:i:s'),
+                'dateTimeFrom' => $from->format('Y-m-d H:i'),
+                'dateTimeTo' => $to->format('Y-m-d H:i'),
             ]);
 
             return $statement->fetchColumn();
@@ -228,8 +287,8 @@ class HRRepository
 
             $statement->execute([
                 'patientId' => $patientId,
-                'dateTimeFrom' => $from->format('Y-m-d H:i:s'),
-                'dateTimeTo' => $to->format('Y-m-d H:i:s'),
+                'dateTimeFrom' => $from->format('Y-m-d H:i'),
+                'dateTimeTo' => $to->format('Y-m-d H:i'),
             ]);
 
             return $statement->fetchColumn();
