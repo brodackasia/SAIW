@@ -20,6 +20,15 @@ ChartJS.register(Title, Tooltip, Legend, BarElement, CategoryScale, LinearScale)
 export default {
   name: "ChartsHR",
   components: {Bar},
+  props: {
+    matType: null,
+    patientId: null,
+    fromDay: null,
+    fromHour: null,
+    toHour: null,
+    toDay: null,
+  },
+  expose: ['showChart'],
   data:  () => ({
     chartData: {
       labels: ['-'],
@@ -32,12 +41,6 @@ export default {
         hoverBorderColor: 'DarkGreen',
       }]
     },
-    matType: null,
-    patientId: null,
-    fromDay: null,
-    fromHour: null,
-    toHour: null,
-    toDay: null,
     chartOptions: {
       plugins: {
         title: {
@@ -113,7 +116,7 @@ export default {
       try {
         //CHART
         const responseChartHR = await axios.get(
-          'http://localhost:8000/hr/chart/' + this.matType,
+          'http://localhost:8000/hr/analysis/' + this.matType,
           { params: {
               patientId: this.patientId,
               from: this.fromDay + " " + this.toHour,
@@ -121,19 +124,18 @@ export default {
             }}
         );
 
-        // this.chartData = {
-        //   labels: responseChartHR.data.map(DataTime),
-        //   datasets: [{
-        //     label: 'HR',
-        //     data: responseChartHR.data.map(DataHR),
-        //     backgroundColor: 'Khaki',
-        //     borderWidth: 1,
-        //     borderColor: '#777',
-        //     hoverBorderWidth: 3,
-        //     hoverBorderColor: 'DarkGreen',
-        //   }]
-        // }
-        console.log(this.chartData);
+        this.chartData = {
+          labels: responseChartHR.data.map(DataTime),
+          datasets: [{
+            label: 'HR',
+            data: responseChartHR.data.map(DataHR),
+            backgroundColor: 'Khaki',
+            borderWidth: 1,
+            borderColor: '#777',
+            hoverBorderWidth: 3,
+            hoverBorderColor: 'DarkGreen',
+          }]
+        }
 
         function DataHR(value) {
           return  value['hr']
@@ -145,24 +147,6 @@ export default {
       catch (error) {
         console.log(error);
       }
-    },
-    handleMatInput(value) {
-      this.matType = value
-    },
-    handlePatientIdInput(value) {
-      this.patientId = value
-    },
-    handleFromDayInput(value) {
-      this.fromDay = value
-    },
-    handleFromHourInput(value) {
-      this.fromHour = value
-    },
-    handleToDayInput(value) {
-      this.toDay = value
-    },
-    handleToHourInput(value) {
-      this.toHour = value
     },
   },
 }

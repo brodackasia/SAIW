@@ -80,7 +80,7 @@
 
       <div class="row mt-4 mb-3">
         <div class="col-lg-3 mx-auto">
-          <button type="button" v-on:click="analyse(); chartsHR.methods.showChart();" id="btn1" class="btn btn-primary btn-lg">Przeprowadź analizę danych</button>
+          <button type="button" v-on:click="analyse()" id="btn1" class="btn btn-primary btn-lg">Przeprowadź analizę danych</button>
         </div>
       </div>
 
@@ -167,7 +167,15 @@
       </div>
 
       <div class="form-group col-lg-8 mt-5 mx-auto" id="myChart" style="background-color: #5FA37E">
-        <ChartsHR/>
+        <ChartsHR
+          :matType="matType"
+          :patientId="patientId"
+          :fromDay="fromDay"
+          :fromHour="fromHour"
+          :toDay="toDay"
+          :toHour="toHour"
+          ref="chartsHRref"
+        />
       </div>
 
       <div class="row">
@@ -214,7 +222,9 @@ import axios from "axios";
 
 export default {
   name: "App",
-  components: {ChartsHR},
+  components: {
+    ChartsHR
+  },
   data() {
     return {
       minimumHR: ['-'],
@@ -231,7 +241,6 @@ export default {
       fromHour: null,
       toDay: null,
       toHour: null,
-      chartsHR: ChartsHR,
     };
   },
   mounted() {
@@ -391,12 +400,6 @@ export default {
       }
     },
     async analyse() {
-      console.log(this.matType);
-      console.log(this.patientId);
-      console.log(this.fromDay);
-      console.log(this.fromHour);
-      console.log(this.toDay);
-      console.log(this.toHour);
       try {
         //CURRENT
         const responseCurrentHr = await axios.get(
@@ -440,33 +443,29 @@ export default {
         );
         this.averageHR = responseAverageHr.data;
 
+        await this.$refs.chartsHRref.showChart()
+
       } catch (error) {
         console.log(error);
       }
     },
     handleMatInput(event) {
       this.matType = event.target.value
-      this.chartsHR.methods.handleMatInput(event.target.value)
     },
     handlePatientIdInput(event) {
       this.patientId = event.target.value
-      this.chartsHR.methods.handlePatientIdInput(event.target.value)
     },
     handleFromDayInput(event) {
       this.fromDay = event.target.value
-      this.chartsHR.methods.handleFromDayInput(event.target.value)
     },
     handleFromHourInput(event) {
       this.fromHour = event.target.value
-      this.chartsHR.methods.handleFromHourInput(event.target.value)
     },
     handleToDayInput(event) {
       this.toDay = event.target.value
-      this.chartsHR.methods.handleToDayInput(event.target.value)
     },
     handleToHourInput(event) {
       this.toHour = event.target.value
-      this.chartsHR.methods.handleToHourInput(event.target.value)
     },
   },
 }

@@ -50,9 +50,9 @@ class HRController extends AbstractController
             return true;
     }
 
-    //CHART
-    #[Route('/chart/{type}', name: 'hr.chart', methods: ['GET'])]
-    public function chartHR(Request $request, string $type)
+    //CHART AND HRV
+    #[Route('/analysis/{type}', name: 'hr.analysis', methods: ['GET'])]
+    public function analysisHR(Request $request, string $type): Response
     {
         //pobieranie parametru z requestu
         $patientId = $request->query->get('patientId');
@@ -82,7 +82,7 @@ class HRController extends AbstractController
         $from = DateTime::createFromFormat('Y-m-d H:i', $from);
 
         return new JsonResponse(
-            $this->HRService->getChartHR($type, $from, $to, (int)$patientId),
+            $this->HRService->getAnalysisHR($type, $from, $to, (int)$patientId),
        );
     }
 

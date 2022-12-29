@@ -18,25 +18,29 @@ class HRRepository
         $this->db = $db;
     }
 
-    //CHART
-    public function getChartHR(string $type, int $patientId, DateTime $from, DateTime $to): array
+    //CHARTS AND HRV
+    public function getAnalysisHR(string $type, int $patientId, DateTime $from, DateTime $to): array
     {
         if($type === 'chair') {
             $statement = $this->db->prepare(<<<SQL
                 SELECT
                     chm.hr,
-                    chm."time"
+                    TO_CHAR(chm."time", 'yyyy-mm-dd hh:mi') AS time
                 FROM
                     patient AS p
                 INNER JOIN
-                    e4l_id_conv AS h on p.id = h.patient_id
+                    hub_assignment_date AS had ON had.patient_id = p.id
+                        AND had.ends_at AT TIME ZONE 'UTC-1' <= NOW()
+                        AND had.starts_at AT TIME ZONE 'UTC-1' <= NOW()
+                INNER JOIN
+                    e4l_id_conv AS h ON h.id = had.hub_id
                 INNER JOIN
                     chair_measurements AS chm ON chm.host = h.hub
                         AND time AT TIME ZONE 'UTC-1' between :dateTimeFrom AND :dateTimeTo
                 WHERE
-                    p.id = :patientId
+                        p.id = :patientId
                 ORDER BY
-                    chm.id DESC
+                    chm.id DESC;
         SQL);
 
             $statement->execute([
@@ -55,14 +59,18 @@ class HRRepository
                 FROM
                     patient AS p
                 INNER JOIN
-                    e4l_id_conv AS h on p.id = h.patient_id
+                    hub_assignment_date AS had ON had.patient_id = p.id
+                        AND had.ends_at AT TIME ZONE 'UTC-1' <= NOW()
+                        AND had.starts_at AT TIME ZONE 'UTC-1' <= NOW()
+                INNER JOIN
+                    e4l_id_conv AS h ON h.id = had.hub_id
                 INNER JOIN
                     bathtub_measurements AS bm ON bm.host = h.hub
                         AND time AT TIME ZONE 'UTC-1' between :dateTimeFrom AND :dateTimeTo
                 WHERE
-                    p.id = :patientId
+                        p.id = :patientId
                 ORDER BY
-                    bm.id DESC
+                    bm.id DESC;
         SQL);
 
             $statement->execute([
@@ -84,17 +92,21 @@ class HRRepository
                     chm.hr
                 FROM
                     patient AS p
-                INNER JOIN
-                    e4l_id_conv AS h on p.id = h.patient_id
-                INNER JOIN
+                        INNER JOIN
+                    hub_assignment_date AS had ON had.patient_id = p.id
+                        AND had.ends_at AT TIME ZONE 'UTC-1' <= NOW()
+                        AND had.starts_at AT TIME ZONE 'UTC-1' <= NOW()
+                        INNER JOIN
+                   e4l_id_conv AS h ON h.id = had.hub_id
+                        INNER JOIN
                     chair_measurements AS chm ON chm.host = h.hub
                         AND chm."time" >= NOW() AT TIME ZONE 'UTC-1' - INTERVAL '2 minutes'
                 WHERE
-                    p.id = :patientId
+                        p.id = :patientId
                 ORDER BY
                     chm.id DESC
                 LIMIT 1;
-            SQL);
+        SQL);
 
             $statement->execute([
                 'patientId' => $patientId
@@ -108,13 +120,17 @@ class HRRepository
                     bm.hr
                 FROM
                     patient AS p
-                INNER JOIN
-                    e4l_id_conv AS h on p.id = h.patient_id
-                INNER JOIN
+                        INNER JOIN
+                    hub_assignment_date AS had ON had.patient_id = p.id
+                        AND had.ends_at AT TIME ZONE 'UTC-1' <= NOW()
+                        AND had.starts_at AT TIME ZONE 'UTC-1' <= NOW()
+                        INNER JOIN
+                   e4l_id_conv AS h ON h.id = had.hub_id
+                        INNER JOIN
                     bathtub_measurements AS bm ON bm.host = h.hub
                         AND bm."time" >= NOW() AT TIME ZONE 'UTC-1' - INTERVAL '2 minutes'
                 WHERE
-                    p.id = :patientId
+                        p.id = :patientId
                 ORDER BY
                     bm.id DESC
                 LIMIT 1;
@@ -138,14 +154,18 @@ class HRRepository
                 FROM
                     patient AS p
                 INNER JOIN
-                    e4l_id_conv AS h on p.id = h.patient_id
+                    hub_assignment_date AS had ON had.patient_id = p.id
+                        AND had.ends_at AT TIME ZONE 'UTC-1' <= NOW()
+                        AND had.starts_at AT TIME ZONE 'UTC-1' <= NOW()
+                INNER JOIN
+                    e4l_id_conv AS h ON h.id = had.hub_id
                 INNER JOIN
                     chair_measurements AS chm ON chm.host = h.hub
                         AND time AT TIME ZONE 'UTC-1' between :dateTimeFrom AND :dateTimeTo
                 WHERE
-                    p.id = :patientId
+                        p.id = :patientId
                 ORDER BY
-                    chm.hr 
+                    chm.hr
                 LIMIT 1;
         SQL);
 
@@ -164,14 +184,18 @@ class HRRepository
                 FROM
                     patient AS p
                 INNER JOIN
-                    e4l_id_conv AS h on p.id = h.patient_id
+                    hub_assignment_date AS had ON had.patient_id = p.id
+                        AND had.ends_at AT TIME ZONE 'UTC-1' <= NOW()
+                        AND had.starts_at AT TIME ZONE 'UTC-1' <= NOW()
+                INNER JOIN
+                    e4l_id_conv AS h ON h.id = had.hub_id
                 INNER JOIN
                     bathtub_measurements AS bm ON bm.host = h.hub
                         AND time AT TIME ZONE 'UTC-1' between :dateTimeFrom AND :dateTimeTo
                 WHERE
-                    p.id = :patientId
+                        p.id = :patientId
                 ORDER BY
-                    bm.hr 
+                    bm.hr
                 LIMIT 1;
         SQL);
 
@@ -195,14 +219,18 @@ class HRRepository
                 FROM
                     patient AS p
                 INNER JOIN
-                    e4l_id_conv AS h on p.id = h.patient_id
+                    hub_assignment_date AS had ON had.patient_id = p.id
+                        AND had.ends_at AT TIME ZONE 'UTC-1' <= NOW()
+                        AND had.starts_at AT TIME ZONE 'UTC-1' <= NOW()
+                INNER JOIN
+                    e4l_id_conv AS h ON h.id = had.hub_id
                 INNER JOIN
                     chair_measurements AS chm ON chm.host = h.hub
                         AND time AT TIME ZONE 'UTC-1' between :dateTimeFrom AND :dateTimeTo
                 WHERE
-                    p.id = :patientId
+                        p.id = :patientId
                 ORDER BY
-                    chm.hr DESC 
+                    chm.hr DESC
                 LIMIT 1;
         SQL);
 
@@ -221,14 +249,18 @@ class HRRepository
                 FROM
                     patient AS p
                 INNER JOIN
-                    e4l_id_conv AS h on p.id = h.patient_id
+                    hub_assignment_date AS had ON had.patient_id = p.id
+                        AND had.ends_at AT TIME ZONE 'UTC-1' <= NOW()
+                        AND had.starts_at AT TIME ZONE 'UTC-1' <= NOW()
+                INNER JOIN
+                    e4l_id_conv AS h ON h.id = had.hub_id
                 INNER JOIN
                     bathtub_measurements AS bm ON bm.host = h.hub
                         AND time AT TIME ZONE 'UTC-1' between :dateTimeFrom AND :dateTimeTo
                 WHERE
-                    p.id = :patientId
+                        p.id = :patientId
                 ORDER BY
-                    bm.hr DESC 
+                    bm.hr DESC
                 LIMIT 1;
         SQL);
 
@@ -252,12 +284,16 @@ class HRRepository
                 FROM
                     patient AS p
                 INNER JOIN
-                    e4l_id_conv AS h on p.id = h.patient_id
+                    hub_assignment_date AS had ON had.patient_id = p.id
+                        AND had.ends_at AT TIME ZONE 'UTC-1' <= NOW()
+                        AND had.starts_at AT TIME ZONE 'UTC-1' <= NOW()
+                INNER JOIN
+                    e4l_id_conv AS h ON h.id = had.hub_id
                 INNER JOIN
                     chair_measurements AS chm ON chm.host = h.hub
                         AND time AT TIME ZONE 'UTC-1' between :dateTimeFrom AND :dateTimeTo
                 WHERE
-                    p.id = :patientId
+                        p.id = :patientId
                 LIMIT 1;
         SQL);
 
@@ -271,18 +307,22 @@ class HRRepository
         }
         else if($type === 'bathtub') {
             $statement = $this->db->prepare(<<<SQL
-            SELECT
-                (sum(bm.hr)/count(bm.hr)) as av
-            FROM
-                patient AS p
-            INNER JOIN
-                e4l_id_conv AS h on p.id = h.patient_id
-            INNER JOIN
-                bathtub_measurements AS bm ON bm.host = h.hub
-                    AND time AT TIME ZONE 'UTC-1' between :dateTimeFrom AND :dateTimeTo
-            WHERE
-                p.id = :patientId
-            LIMIT 1;
+                SELECT
+                    (sum(bm.hr)/count(bm.hr)) as av
+                FROM
+                    patient AS p
+                INNER JOIN
+                    hub_assignment_date AS had ON had.patient_id = p.id
+                        AND had.ends_at AT TIME ZONE 'UTC-1' <= NOW()
+                        AND had.starts_at AT TIME ZONE 'UTC-1' <= NOW()
+                INNER JOIN
+                    e4l_id_conv AS h ON h.id = had.hub_id
+                INNER JOIN
+                    bathtub_measurements AS bm ON bm.host = h.hub
+                        AND time AT TIME ZONE 'UTC-1' between :dateTimeFrom AND :dateTimeTo
+                WHERE
+                        p.id = :patientId
+                LIMIT 1;
         SQL);
 
             $statement->execute([
