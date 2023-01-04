@@ -18,8 +18,8 @@ class HRRepository
         $this->db = $db;
     }
 
-    //CHARTS AND HRV
-    public function getAnalysisHR(string $type, int $patientId, DateTime $from, DateTime $to): array
+    //CHART
+    public function getChartHR(string $type, int $patientId, DateTime $from, DateTime $to): array
     {
         if($type === 'chair') {
             $statement = $this->db->prepare(<<<SQL
@@ -40,7 +40,7 @@ class HRRepository
                 WHERE
                         p.id = :patientId
                 ORDER BY
-                    chm.id DESC;
+                    chm.id;
         SQL);
 
             $statement->execute([
@@ -80,6 +80,69 @@ class HRRepository
             ]);
 
             return $statement->fetchAll(PDO::FETCH_ASSOC);
+        }
+    }
+
+    //HRV
+    public function getHRV(string $type, int $patientId, DateTime $from, DateTime $to): string
+    {
+        if($type === 'chair') {
+            $statement = $this->db->prepare(<<<SQL
+            SELECT
+                round(stddev_pop(chm.hr), 0)
+            FROM
+                patient AS p
+            INNER JOIN
+                hub_assignment_date AS had ON had.patient_id = p.id
+                    AND had.ends_at AT TIME ZONE 'UTC-1' <= NOW()
+                    AND had.starts_at AT TIME ZONE 'UTC-1' <= NOW()
+            INNER JOIN
+                e4l_id_conv AS h ON h.id = had.hub_id
+            INNER JOIN
+                chair_measurements AS chm ON chm.host = h.hub
+                    AND time AT TIME ZONE 'UTC-1' between :dateTimeFrom AND :dateTimeTo
+            WHERE
+                p.id = :patientId
+            GROUP BY
+                had.patient_id;
+        SQL);
+
+            $statement->execute([
+                'patientId' => $patientId,
+                'dateTimeFrom' => $from->format('Y-m-d H:i'),
+                'dateTimeTo' => $to->format('Y-m-d H:i'),
+            ]);
+
+            return $statement->fetchColumn();
+        }
+        else if($type === 'bathtub') {
+            $statement = $this->db->prepare(<<<SQL
+                SELECT
+                round(stddev_pop(bm.hr), 2)
+            FROM
+                patient AS p
+            INNER JOIN
+                hub_assignment_date AS had ON had.patient_id = p.id
+                    AND had.ends_at AT TIME ZONE 'UTC-1' <= NOW()
+                    AND had.starts_at AT TIME ZONE 'UTC-1' <= NOW()
+            INNER JOIN
+                e4l_id_conv AS h ON h.id = had.hub_id
+            INNER JOIN
+                bathtub_measurements AS bm ON bm.host = h.hub
+                    AND time AT TIME ZONE 'UTC-1' between :dateTimeFrom AND :dateTimeTo
+            WHERE
+                    p.id = :patientId
+            GROUP BY
+                had.patient_id;
+        SQL);
+
+            $statement->execute([
+                'patientId' => $patientId,
+                'dateTimeFrom' => $from->format('Y-m-d H:i'),
+                'dateTimeTo' => $to->format('Y-m-d H:i'),
+            ]);
+
+            return $statement->fetchColumn();
         }
     }
 

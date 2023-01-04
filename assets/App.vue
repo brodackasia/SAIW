@@ -1,8 +1,8 @@
 <template xmlns="http://www.w3.org/1999/html">
   <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
     <div class="container-fluid col-lg-12 mx-auto position">
-        <a class="navbar-brand" id="ella" href="#">Ella4Life</a>
-      <button type="button" id="btn1" class="btn btn-primary btn-lg">
+        <a class="navbar-brand" id="ella1" href="#">Ella4Life</a>
+      <button type="button" class="btn btn-primary btn-lg">
         <a class="navbar-brand" id="ella" href="/logout">Wyloguj się</a>
       </button>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarColor01"
@@ -141,10 +141,9 @@
           <div class="form-group">
             <legend>Parametr zmienności:</legend>
             <div class="card text-white bg-info mt-3 mb-3" style="max-width: 24rem;">
-              <div class="card-body" id="btn6">
-                <h4 class="card-title text-center">
-                  60
-                </h4>
+<!--              <h4 class="card-title text-center">test</h4>-->
+              <div v-for="responseHRV in HRV" id="hrv" class="card-body">
+                    <h4 class="card-title text-center">{{responseHRV}}</h4>
               </div>
             </div>
           </div>
@@ -231,6 +230,7 @@ export default {
       maximumHR: ['-'],
       currentHR: ['-'],
       averageHR: ['-'],
+      HRV: ['-'],
       isContrastModeEnabled: false,
       isDarkModeEnabled: false,
       patients: {},
@@ -255,6 +255,7 @@ export default {
       if (this.isContrastModeEnabled) {
 
         document.body.style.color = 'Gold';
+        document.body.style.backgroundColor = 'Black';
         document.getElementById("ella").style.color = 'Gold';
         document.getElementById("exampleSelect1").style.backgroundColor = '#202020';
         document.getElementById("exampleSelect1").style.color = 'Gold';
@@ -288,15 +289,14 @@ export default {
         document.getElementById("btn4").style.color = 'Gold';
         document.getElementById("btn5").style.backgroundColor = '#202020';
         document.getElementById("btn5").style.color = 'Gold';
-        document.getElementById("btn6").style.backgroundColor = '#202020';
-        document.getElementById("btn6").style.color = 'Gold';
+        document.getElementById("hrv").style.backgroundColor = '#202020';
+        document.getElementById("hrv").style.color = 'Gold';
         document.getElementById("btn7").style.backgroundColor = '#202020';
         document.getElementById("btn7").style.color = 'Gold';
         document.getElementById("btn8").style.backgroundColor = '#202020';
         document.getElementById("btn8").style.color = 'Gold';
         document.getElementById("tryb1").style.color = 'Gold';
         document.getElementById("tryb2").style.color = 'Gold';
-        document.body.style.backgroundColor = 'Black';
 
       } else {
 
@@ -335,8 +335,8 @@ export default {
         document.getElementById("btn4").style.color = 'white';
         document.getElementById("btn5").style.backgroundColor = '#71C6D2';
         document.getElementById("btn5").style.color = 'white';
-        document.getElementById("btn6").style.backgroundColor = '#71C6D2';
-        document.getElementById("btn6").style.color = 'white';
+        document.getElementById("hrv").style.backgroundColor = '#71C6D2';
+        document.getElementById("hrv").style.color = 'white';
         document.getElementById("btn7").style.backgroundColor = '#71C6D2';
         document.getElementById("btn7").style.color = 'white';
         document.getElementById("btn8").style.backgroundColor = '#6FC3AF';
@@ -352,6 +352,7 @@ export default {
       if (this.isDarkModeEnabled) {
 
         document.body.style.color = 'White';
+        document.body.style.backgroundColor = 'DarkSlateGray';
         document.getElementById("exampleSelect1").style.backgroundColor = '#303030';
         document.getElementById("optionsRadios1").style.backgroundColor = '#303030';
         document.getElementById("optionsRadios2").style.backgroundColor = '#303030';
@@ -368,13 +369,11 @@ export default {
         document.getElementById("btn3").style.backgroundColor = '#303030';
         document.getElementById("btn4").style.backgroundColor = '#303030';
         document.getElementById("btn5").style.backgroundColor = '#303030';
-        document.getElementById("btn6").style.backgroundColor = '#303030';
+        document.getElementById("hrv").style.backgroundColor = '#303030';
         document.getElementById("btn7").style.backgroundColor = '#303030';
         document.getElementById("btn8").style.backgroundColor = '#303030';
-        document.body.style.backgroundColor = 'DarkSlateGray';
 
       } else {
-
         document.body.style.color = 'DarkSlateGray';
         document.body.style.backgroundColor = 'White';
         document.getElementById("exampleSelect1").style.backgroundColor = 'white';
@@ -393,7 +392,7 @@ export default {
         document.getElementById("btn3").style.backgroundColor = '#71C6D2';
         document.getElementById("btn4").style.backgroundColor = '#71C6D2';
         document.getElementById("btn5").style.backgroundColor = '#71C6D2';
-        document.getElementById("btn6").style.backgroundColor = '#71C6D2';
+        document.getElementById("hrv").style.backgroundColor = '#71C6D2';
         document.getElementById("btn7").style.backgroundColor = '#71C6D2';
         document.getElementById("btn8").style.backgroundColor = '#6FC3AF';
 
@@ -401,6 +400,7 @@ export default {
     },
     async analyse() {
       try {
+
         //CURRENT
         const responseCurrentHr = await axios.get(
             'http://localhost:8000/hr/current/' + this.matType,
@@ -442,6 +442,17 @@ export default {
               }}
         );
         this.averageHR = responseAverageHr.data;
+
+        //HRV
+        const responseHRV = await axios.get(
+            'http://localhost:8000/hr/hrv/' + this.matType,
+            { params: {
+                patientId: this.patientId,
+                from: this.fromDay + " " + this.fromHour,
+                to: this.toDay + " " + this.toHour,
+              }}
+        );
+        this.HRV = responseHRV.data;
 
         await this.$refs.chartsHRref.showChart()
 

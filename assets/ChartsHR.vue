@@ -116,7 +116,7 @@ export default {
       try {
         //CHART
         const responseChartHR = await axios.get(
-          'http://localhost:8000/hr/analysis/' + this.matType,
+          'http://localhost:8000/hr/chart/' + this.matType,
           { params: {
               patientId: this.patientId,
               from: this.fromDay + " " + this.toHour,

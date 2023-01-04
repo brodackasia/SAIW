@@ -50,9 +50,9 @@ class HRController extends AbstractController
             return true;
     }
 
-    //CHART AND HRV
-    #[Route('/analysis/{type}', name: 'hr.analysis', methods: ['GET'])]
-    public function analysisHR(Request $request, string $type): Response
+    //CHART
+    #[Route('/chart/{type}', name: 'hr.chart', methods: ['GET'])]
+    public function chartHR(Request $request, string $type): Response
     {
         //pobieranie parametru z requestu
         $patientId = $request->query->get('patientId');
@@ -82,8 +82,44 @@ class HRController extends AbstractController
         $from = DateTime::createFromFormat('Y-m-d H:i', $from);
 
         return new JsonResponse(
-            $this->HRService->getAnalysisHR($type, $from, $to, (int)$patientId),
+            $this->HRService->getChartHR($type, $from, $to, (int)$patientId)
        );
+    }
+
+    //HRV
+    #[Route('/hrv/{type}', name: 'hr.hrv', methods: ['GET'])]
+    public function HRV(Request $request, string $type): Response
+    {
+        //pobieranie parametru z requestu
+        $patientId = $request->query->get('patientId');
+        $from = $request->query->get('from');
+        $to = $request->query->get('to');
+
+        //wywolanie funkcji walidacji x2
+        if (
+            !$this->patientIdValidation((int)($patientId))
+        ) {
+            return new Response(
+                'Invalid parameter "patientId"!',
+                Response::HTTP_BAD_REQUEST
+            );
+        }
+
+        if (
+            !$this->fromAndToValidation($from, $to)
+        ){
+            return new Response(
+                'Invalid parameter "from" or "to"!',
+                Response::HTTP_BAD_REQUEST
+            );
+        }
+
+        $to = DateTime::createFromFormat('Y-m-d H:i', $to);
+        $from = DateTime::createFromFormat('Y-m-d H:i', $from);
+
+        return new JsonResponse([
+            'hrv' => $this->HRService->getHRV($type, $from, $to, (int)$patientId)
+        ]);
     }
 
     //CURRENT

@@ -16,9 +16,14 @@ class HRService
         $this->HRRepository = $HRRepository;
     }
 
-    public function getAnalysisHR(string $type, DateTime $from, DateTime $to, int $patientId): array
+    public function getChartHR(string $type, DateTime $from, DateTime $to, int $patientId): array
     {
-        return $this->HRRepository->getAnalysisHR($type, $patientId, $from, $to);
+        return $this->HRRepository->getChartHR($type, $patientId, $from, $to);
+    }
+
+    public function getHRV(string $type, DateTime $from, DateTime $to, int $patientId): string
+    {
+        return $this->HRRepository->getHRV($type, $patientId, $from, $to);
     }
 
     public function getCurrentHR(string $type, int $patientId): ?int
