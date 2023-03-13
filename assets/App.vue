@@ -207,6 +207,10 @@ export default {
       toHour: null,
     };
   },
+  mounted() {
+    let elPatients = document.querySelector("div[data-patients]");
+    this.patients = JSON.parse(elPatients.dataset.patients);
+  },
   methods: {
     async analyse() {
       try {
