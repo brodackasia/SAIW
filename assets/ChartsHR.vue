@@ -1,6 +1,6 @@
 <template>
   <Bar
-      id="my-chart-id"
+      id="myChart"
       :options="chartOptions"
       :data="chartData"
       ref="bar"
@@ -73,7 +73,7 @@ export default {
           display: true,
           title: {
             display: true,
-            text: 'Wartość rytmu serca',
+            text: 'Zadany przedział czasu',
             color: 'white',
             font: {
               family: 'Times',
@@ -97,7 +97,7 @@ export default {
           display: true,
           title: {
             display: true,
-            text: 'Przedział czasu',
+            text: 'Wartość rytmu serca',
             color: 'white',
             font: {
               family: 'Times',
@@ -114,7 +114,6 @@ export default {
   methods: {
     async showChart() {
       try {
-        //CHART
         const responseChartHR = await axios.get(
           'http://localhost:8000/hr/chart/' + this.matType,
           { params: {

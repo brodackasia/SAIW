@@ -22,7 +22,7 @@ class HRController extends AbstractController
         $this->HRService = $HRService;
     }
 
-    //WALIDACJA PATIENT ID
+    //VALIDATING PATIENT ID
     public function patientIdValidation(int $patientId): bool
     {
         if (
@@ -34,16 +34,25 @@ class HRController extends AbstractController
             return true;
     }
 
-    //WALIDACJA TO AND FROM PARAMETERS
-    public function fromAndToValidation(string $from, string $to): bool
+    //VALIDATING TO AND FROM PARAMETERS
+    public function fromAndToValidation(string $from, string $to): bool //czemu string nie datetime
     {
-        //spr czy jest dobry format, czy da sie utworzyc date z tego co w requescie
-        // zwraca datetime lub false
         if (
             is_null($to)
             || is_null($from)
             || !DateTime::createFromFormat('Y-m-d H:i', $from)
             || !DateTime::createFromFormat('Y-m-d H:i', $to)
+        )
+            return false;
+        else
+            return true;
+    }
+
+    //VALIDATING TYPE OF MAT
+    public function typeOfMatValidation (string $type): bool
+    {
+        if (
+            is_null($type)
         )
             return false;
         else
@@ -59,9 +68,9 @@ class HRController extends AbstractController
         $from = $request->query->get('from');
         $to = $request->query->get('to');
 
-        //wywolanie funkcji walidacji x2
+        //wywolanie funkcji walidacji x3
         if (
-            !$this->patientIdValidation((int)($patientId))
+            !$this->patientIdValidation((int)$patientId)
         ) {
             return new Response(
                 'Invalid parameter "patientId"!',
@@ -77,6 +86,15 @@ class HRController extends AbstractController
                 Response::HTTP_BAD_REQUEST
             );
         }
+
+        if (
+            !$this->typeOfMatValidation($type)
+        ){
+                return new Response(
+                    'Invalid parameter "type"!',
+                    Response::HTTP_BAD_REQUEST
+                );
+            }
 
         $to = DateTime::createFromFormat('Y-m-d H:i', $to);
         $from = DateTime::createFromFormat('Y-m-d H:i', $from);
@@ -95,9 +113,9 @@ class HRController extends AbstractController
         $from = $request->query->get('from');
         $to = $request->query->get('to');
 
-        //wywolanie funkcji walidacji x2
+        //wywolanie funkcji walidacji x3
         if (
-            !$this->patientIdValidation((int)($patientId))
+            !$this->patientIdValidation((int)$patientId)
         ) {
             return new Response(
                 'Invalid parameter "patientId"!',
@@ -111,6 +129,15 @@ class HRController extends AbstractController
             return new Response(
                 'Invalid parameter "from" or "to"!',
                 Response::HTTP_BAD_REQUEST
+            );
+        }
+
+        if (
+            !$this->typeOfMatValidation($type)
+        ){
+            return new Response(
+            'Invalid parameter "type"!',
+            Response::HTTP_BAD_REQUEST
             );
         }
 
@@ -128,12 +155,21 @@ class HRController extends AbstractController
     {
         $patientId = $request->query->get('patientId');
 
-        //wywolanie funkcji walidacji
+        //wywolanie funkcji walidacji x2
         if (
-            !$this->patientIdValidation((int)($patientId))
+            !$this->patientIdValidation((int)$patientId)
         ) {
             return new Response(
                 'Invalid parameter "patientId"!',
+                Response::HTTP_BAD_REQUEST
+            );
+        }
+
+        if (
+            !$this->typeOfMatValidation($type)
+        ){
+            return new Response(
+                'Invalid parameter "type"!',
                 Response::HTTP_BAD_REQUEST
             );
         }
@@ -153,9 +189,9 @@ class HRController extends AbstractController
         $from = $request->query->get('from');
         $to = $request->query->get('to');
 
-        //wywolanie funkcji walidacji x2
+        //wywolanie funkcji walidacji x3
         if (
-            !$this->patientIdValidation((int)($patientId))
+            !$this->patientIdValidation((int)$patientId)
         ) {
             return new Response(
                 'Invalid parameter "patientId"!',
@@ -168,6 +204,15 @@ class HRController extends AbstractController
         ) {
             return new Response(
                 'Invalid parameter "from" or "to"!',
+                Response::HTTP_BAD_REQUEST
+            );
+        }
+
+        if (
+            !$this->typeOfMatValidation($type)
+        ){
+            return new Response(
+                'Invalid parameter "type"!',
                 Response::HTTP_BAD_REQUEST
             );
         }
@@ -189,7 +234,7 @@ class HRController extends AbstractController
         $from = $request->query->get('from');
         $to = $request->query->get('to');
 
-        //wywolanie funkcji walidacji x2
+        //wywolanie funkcji walidacji x3
         if (
             !$this->patientIdValidation((int)($patientId))
         ) {
@@ -204,6 +249,15 @@ class HRController extends AbstractController
         ){
             return new Response(
                 'Invalid parameter "from" or "to"!',
+                Response::HTTP_BAD_REQUEST
+            );
+        }
+
+        if (
+            !$this->typeOfMatValidation($type)
+        ){
+            return new Response(
+                'Invalid parameter "type"!',
                 Response::HTTP_BAD_REQUEST
             );
         }
@@ -225,9 +279,9 @@ class HRController extends AbstractController
         $from = $request->query->get('from');
         $to = $request->query->get('to');
 
-        //wywolanie funkcji walidacji x2
+        //wywolanie funkcji walidacji x3
         if (
-            !$this->patientIdValidation((int)($patientId))
+            !$this->patientIdValidation((int)$patientId)
         ) {
             return new Response(
                 'Invalid parameter "patientId"!',
@@ -240,6 +294,15 @@ class HRController extends AbstractController
         ){
             return new Response(
                 'Invalid parameter "from" or "to"!',
+                Response::HTTP_BAD_REQUEST
+            );
+        }
+
+        if (
+            !$this->typeOfMatValidation($type)
+        ){
+            return new Response(
+                'Invalid parameter "type"!',
                 Response::HTTP_BAD_REQUEST
             );
         }

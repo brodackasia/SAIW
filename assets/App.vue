@@ -165,7 +165,7 @@
         </span>
       </div>
 
-      <div class="form-group col-lg-8 mt-5 mx-auto" id="myChart" style="background-color: #5FA37E">
+      <div class="form-group col-lg-8 mt-5 mb-5 mx-auto" id="myChart" style="background-color: #5FA37E">
         <ChartsHR
           :matType="matType"
           :patientId="patientId"
@@ -175,40 +175,6 @@
           :toHour="toHour"
           ref="chartsHRref"
         />
-      </div>
-
-      <div class="row">
-        <div class="col-lg-11 mt-5 mx-auto">
-          <form>
-            <fieldset>
-              <legend>Wyślij zalecenia do pacjenta</legend>
-              <div class="form-group mt-3">
-                <label for="exampleInputEmail1" class="form-label mt-3">Adres email pacjenta</label>
-                <input type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp">
-                <label for="exampleTextarea" class="form-label mt-3">Treść</label>
-                <textarea class="form-control" id="exampleTextarea" rows="3"></textarea>
-                <label for="formFile" class="form-label mt-3">Prześlij pliki</label>
-                <input class="form-control" type="file" id="formFile">
-                <button type="submit" class="btn btn-primary mt-3 mb-2" id="btn8">Wyślij</button>
-              </div>
-            </fieldset>
-          </form>
-        </div>
-      </div>
-
-
-      <div class="row mt-5 mb-3">
-        <div class="col-lg-11 mx-auto">
-          <button type="button" class="btn btn-dark btn-lg" id="tryb1" v-on:click="toggleContrastMode">
-            {{ isContrastModeEnabled ? 'Tryb kontrastowy' : 'Tryb kontrastowy' }}
-          </button>
-        </div>
-        <div class="col-lg-11 mx-auto">
-          <br>
-          <button type="button" class="btn btn-dark btn-lg" id="tryb2" v-on:click="toggleDarkMode">
-            {{ isDarkModeEnabled ? 'Tryb ciemny' : 'Tryb ciemny' }}
-          </button>
-        </div>
       </div>
     </div>
   </div>
@@ -231,8 +197,6 @@ export default {
       currentHR: ['-'],
       averageHR: ['-'],
       HRV: ['-'],
-      isContrastModeEnabled: false,
-      isDarkModeEnabled: false,
       patients: {},
       matType: null,
       patientId: null,
@@ -243,161 +207,7 @@ export default {
       toHour: null,
     };
   },
-  mounted() {
-    let elPatients = document.querySelector("div[data-patients]");
-    this.patients = JSON.parse(elPatients.dataset.patients);
-  },
   methods: {
-    //TRYB KONTRASTOWY
-    toggleContrastMode() {
-      this.isContrastModeEnabled = !this.isContrastModeEnabled;
-
-      if (this.isContrastModeEnabled) {
-
-        document.body.style.color = 'Gold';
-        document.body.style.backgroundColor = 'Black';
-        document.getElementById("ella").style.color = 'Gold';
-        document.getElementById("exampleSelect1").style.backgroundColor = '#202020';
-        document.getElementById("exampleSelect1").style.color = 'Gold';
-        document.getElementById("optionsRadios1").style.backgroundColor = '#202020';
-        document.getElementById("optionsRadios1").style.color = 'Gold';
-        document.getElementById("optionsRadios2").style.backgroundColor = '#202020';
-        document.getElementById("optionsRadios2").style.color = 'Gold';
-        document.getElementById("inputDefault1").style.backgroundColor = '#202020';
-        document.getElementById("inputDefault1").style.color = 'Gold';
-        document.getElementById("inputDefault2").style.backgroundColor = '#202020';
-        document.getElementById("inputDefault2").style.color = 'Gold';
-        document.getElementById("inputDefault3").style.backgroundColor = '#202020';
-        document.getElementById("inputDefault3").style.color = 'Gold';
-        document.getElementById("inputDefault4").style.backgroundColor = '#202020';
-        document.getElementById("inputDefault4").style.color = 'Gold';
-        document.getElementById("exampleInputEmail1").style.backgroundColor = '#202020';
-        document.getElementById("exampleInputEmail1").style.color = 'Gold';
-        document.getElementById("exampleTextarea").style.backgroundColor = '#202020';
-        document.getElementById("exampleTextarea").style.color = 'Gold';
-        document.getElementById("formFile").style.backgroundColor = '#202020';
-        document.getElementById("formFile").style.color = 'Gold';
-        document.getElementById("myChart").style.backgroundColor = '#153122';
-        document.getElementById("myChart").style.color = 'Gold'; ///?????
-        document.getElementById("btn1").style.backgroundColor = '#202020';
-        document.getElementById("btn1").style.color = 'Gold';
-        document.getElementById("btn2").style.backgroundColor = '#202020';
-        document.getElementById("btn2").style.color = 'Gold';
-        document.getElementById("btn3").style.backgroundColor = '#202020';
-        document.getElementById("btn3").style.color = 'Gold';
-        document.getElementById("btn4").style.backgroundColor = '#202020';
-        document.getElementById("btn4").style.color = 'Gold';
-        document.getElementById("btn5").style.backgroundColor = '#202020';
-        document.getElementById("btn5").style.color = 'Gold';
-        document.getElementById("hrv").style.backgroundColor = '#202020';
-        document.getElementById("hrv").style.color = 'Gold';
-        document.getElementById("btn7").style.backgroundColor = '#202020';
-        document.getElementById("btn7").style.color = 'Gold';
-        document.getElementById("btn8").style.backgroundColor = '#202020';
-        document.getElementById("btn8").style.color = 'Gold';
-        document.getElementById("tryb1").style.color = 'Gold';
-        document.getElementById("tryb2").style.color = 'Gold';
-
-      } else {
-
-        document.body.style.color = 'Black';
-        document.body.style.backgroundColor = 'White';
-        document.getElementById("ella").style.color = 'white';
-        document.getElementById("exampleSelect1").style.backgroundColor = 'white';
-        document.getElementById("exampleSelect1").style.color = 'black';
-        document.getElementById("optionsRadios1").style.backgroundColor = 'white';
-        document.getElementById("optionsRadios1").style.color = 'black';
-        document.getElementById("optionsRadios2").style.backgroundColor = 'white';
-        document.getElementById("optionsRadios2").style.color = 'black';
-        document.getElementById("inputDefault1").style.backgroundColor = 'white';
-        document.getElementById("inputDefault1").style.color = 'black';
-        document.getElementById("inputDefault2").style.backgroundColor = 'white';
-        document.getElementById("inputDefault2").style.color = 'black';
-        document.getElementById("inputDefault3").style.backgroundColor = 'white';
-        document.getElementById("inputDefault3").style.color = 'black';
-        document.getElementById("inputDefault4").style.backgroundColor = 'white';
-        document.getElementById("inputDefault4").style.color = 'black';
-        document.getElementById("exampleInputEmail1").style.backgroundColor = 'white';
-        document.getElementById("exampleInputEmail1").style.color = 'black';
-        document.getElementById("exampleTextarea").style.backgroundColor = 'white';
-        document.getElementById("exampleTextarea").style.color = 'black';
-        document.getElementById("formFile").style.backgroundColor = 'white';
-        document.getElementById("formFile").style.color = 'black';
-        document.getElementById("myChart").style.backgroundColor = '#5FA37E';
-        document.getElementById("myChart").style.color = 'Black'; ///?????
-        document.getElementById("btn1").style.backgroundColor = '#6FC3AF';
-        document.getElementById("btn1").style.color = 'white';
-        document.getElementById("btn2").style.backgroundColor = '#71C6D2';
-        document.getElementById("btn2").style.color = 'white';
-        document.getElementById("btn3").style.backgroundColor = '#71C6D2';
-        document.getElementById("btn3").style.color = 'white';
-        document.getElementById("btn4").style.backgroundColor = '#71C6D2';
-        document.getElementById("btn4").style.color = 'white';
-        document.getElementById("btn5").style.backgroundColor = '#71C6D2';
-        document.getElementById("btn5").style.color = 'white';
-        document.getElementById("hrv").style.backgroundColor = '#71C6D2';
-        document.getElementById("hrv").style.color = 'white';
-        document.getElementById("btn7").style.backgroundColor = '#71C6D2';
-        document.getElementById("btn7").style.color = 'white';
-        document.getElementById("btn8").style.backgroundColor = '#6FC3AF';
-        document.getElementById("btn8").style.color = 'white';
-        document.getElementById("tryb1").style.color = 'white';
-        document.getElementById("tryb2").style.color = 'white';
-      }
-    },
-    //TRYB CIEMNY
-    toggleDarkMode() {
-      this.isDarkModeEnabled = !this.isDarkModeEnabled;
-
-      if (this.isDarkModeEnabled) {
-
-        document.body.style.color = 'White';
-        document.body.style.backgroundColor = 'DarkSlateGray';
-        document.getElementById("exampleSelect1").style.backgroundColor = '#303030';
-        document.getElementById("optionsRadios1").style.backgroundColor = '#303030';
-        document.getElementById("optionsRadios2").style.backgroundColor = '#303030';
-        document.getElementById("inputDefault1").style.backgroundColor = '#303030';
-        document.getElementById("inputDefault2").style.backgroundColor = '#303030';
-        document.getElementById("inputDefault3").style.backgroundColor = '#303030';
-        document.getElementById("inputDefault4").style.backgroundColor = '#303030';
-        document.getElementById("exampleInputEmail1").style.backgroundColor = '#303030';
-        document.getElementById("exampleTextarea").style.backgroundColor = '#303030';
-        document.getElementById("formFile").style.backgroundColor = '#303030';
-        document.getElementById("myChart").style.backgroundColor = '#316F5F';
-        document.getElementById("btn1").style.backgroundColor = '#303030';
-        document.getElementById("btn2").style.backgroundColor = '#303030';
-        document.getElementById("btn3").style.backgroundColor = '#303030';
-        document.getElementById("btn4").style.backgroundColor = '#303030';
-        document.getElementById("btn5").style.backgroundColor = '#303030';
-        document.getElementById("hrv").style.backgroundColor = '#303030';
-        document.getElementById("btn7").style.backgroundColor = '#303030';
-        document.getElementById("btn8").style.backgroundColor = '#303030';
-
-      } else {
-        document.body.style.color = 'DarkSlateGray';
-        document.body.style.backgroundColor = 'White';
-        document.getElementById("exampleSelect1").style.backgroundColor = 'white';
-        document.getElementById("optionsRadios1").style.backgroundColor = 'white';
-        document.getElementById("optionsRadios2").style.backgroundColor = 'white';
-        document.getElementById("inputDefault1").style.backgroundColor = 'white';
-        document.getElementById("inputDefault2").style.backgroundColor = 'white';
-        document.getElementById("inputDefault3").style.backgroundColor = 'white';
-        document.getElementById("inputDefault4").style.backgroundColor = 'white';
-        document.getElementById("exampleInputEmail1").style.backgroundColor = 'white';
-        document.getElementById("exampleTextarea").style.backgroundColor = 'white';
-        document.getElementById("formFile").style.backgroundColor = 'white';
-        document.getElementById("myChart").style.backgroundColor = '#5FA37E';
-        document.getElementById("btn1").style.backgroundColor = '#6FC3AF';
-        document.getElementById("btn2").style.backgroundColor = '#71C6D2';
-        document.getElementById("btn3").style.backgroundColor = '#71C6D2';
-        document.getElementById("btn4").style.backgroundColor = '#71C6D2';
-        document.getElementById("btn5").style.backgroundColor = '#71C6D2';
-        document.getElementById("hrv").style.backgroundColor = '#71C6D2';
-        document.getElementById("btn7").style.backgroundColor = '#71C6D2';
-        document.getElementById("btn8").style.backgroundColor = '#6FC3AF';
-
-      }
-    },
     async analyse() {
       try {
 
@@ -454,6 +264,7 @@ export default {
         );
         this.HRV = responseHRV.data;
 
+        //CHART
         await this.$refs.chartsHRref.showChart()
 
       } catch (error) {

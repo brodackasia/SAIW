@@ -23,17 +23,17 @@ class PatientsRepository
         $statement = $this->db->prepare(
             <<<SQL
                 SELECT
-                    ui.id,
-                    ui.name,
-                    ui.surname
+                    p.id,
+                    p.name,
+                    p.surname
                 FROM
                     "user" as u
                 INNER JOIN
-                    patient AS ui on u.id = ui.user_id
+                    patient AS p on u.id = p.user_id
                 WHERE
-                    u.id = :userId
+                    u.id = :userId 
                 ORDER BY
-                    ui.id DESC;
+                    p.id DESC;
             SQL
         );
         $statement->execute([
