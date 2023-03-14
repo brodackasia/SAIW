@@ -16,7 +16,6 @@ class PatientsRepository
         $this->db = $db;
     }
 
-
     //PATIENT_CHOOSE
     public function getPatientsNames(int $userId): array
     {

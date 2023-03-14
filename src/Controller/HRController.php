@@ -81,7 +81,7 @@ class HRController extends AbstractController
 
         if (
             !$this->typeOfMatValidation($type)
-        ){
+        ) {
                 return new Response(
                     'Invalid parameter "type"!',
                     Response::HTTP_BAD_REQUEST
@@ -117,7 +117,7 @@ class HRController extends AbstractController
 
         if (
             !$this->fromAndToValidation($from, $to)
-        ){
+        ) {
             return new Response(
                 'Invalid parameter "from" or "to"!',
                 Response::HTTP_BAD_REQUEST
@@ -126,7 +126,7 @@ class HRController extends AbstractController
 
         if (
             !$this->typeOfMatValidation($type)
-        ){
+        ) {
             return new Response(
             'Invalid parameter "type"!',
             Response::HTTP_BAD_REQUEST
@@ -159,7 +159,7 @@ class HRController extends AbstractController
 
         if (
             !$this->typeOfMatValidation($type)
-        ){
+        ) {
             return new Response(
                 'Invalid parameter "type"!',
                 Response::HTTP_BAD_REQUEST
@@ -202,7 +202,7 @@ class HRController extends AbstractController
 
         if (
             !$this->typeOfMatValidation($type)
-        ){
+        ) {
             return new Response(
                 'Invalid parameter "type"!',
                 Response::HTTP_BAD_REQUEST
@@ -238,7 +238,7 @@ class HRController extends AbstractController
 
         if (
             !$this->fromAndToValidation($from, $to)
-        ){
+        ) {
             return new Response(
                 'Invalid parameter "from" or "to"!',
                 Response::HTTP_BAD_REQUEST
@@ -247,7 +247,7 @@ class HRController extends AbstractController
 
         if (
             !$this->typeOfMatValidation($type)
-        ){
+        ) {
             return new Response(
                 'Invalid parameter "type"!',
                 Response::HTTP_BAD_REQUEST
@@ -283,7 +283,7 @@ class HRController extends AbstractController
 
         if (
             !$this->fromAndToValidation($from, $to)
-        ){
+        ) {
             return new Response(
                 'Invalid parameter "from" or "to"!',
                 Response::HTTP_BAD_REQUEST
@@ -292,7 +292,7 @@ class HRController extends AbstractController
 
         if (
             !$this->typeOfMatValidation($type)
-        ){
+        ) {
             return new Response(
                 'Invalid parameter "type"!',
                 Response::HTTP_BAD_REQUEST
