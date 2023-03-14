@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Controller;
 
+use App\Const\MatTypeConst;
 use App\Service\HRService;
 use DateTime;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -25,38 +26,29 @@ class HRController extends AbstractController
     //VALIDATING PATIENT ID
     public function patientIdValidation(int $patientId): bool
     {
-        if (
+        return !(
             is_null($patientId)
             || !is_numeric($patientId)
-        )
-            return false;
-        else
-            return true;
+        );
     }
 
     //VALIDATING TO AND FROM PARAMETERS
     public function fromAndToValidation(string $from, string $to): bool //czemu string nie datetime
     {
-        if (
+        return !(
             is_null($to)
             || is_null($from)
             || !DateTime::createFromFormat('Y-m-d H:i', $from)
             || !DateTime::createFromFormat('Y-m-d H:i', $to)
-        )
-            return false;
-        else
-            return true;
+        );
     }
 
     //VALIDATING TYPE OF MAT
-    public function typeOfMatValidation (string $type): bool
+    public function typeOfMatValidation(string $type): bool
     {
-        if (
-            is_null($type)
-        )
-            return false;
-        else
-            return true;
+        return !(
+            in_array($type, MatTypeConst::ALL_TYPES)
+        );
     }
 
     //CHART
