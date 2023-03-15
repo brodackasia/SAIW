@@ -14,13 +14,13 @@ class HRRepository
 
     public function __construct(Connection $db)
     {
-        $this->db = $db; //dependency injection, przy zmianie sposobu komunikacji z bazą, można zmienić obiekt $db na inny, zamiast zmieniać samą klasę
+        $this->db = $db;
     }
 
-    //CHART1
+    //CHART
     public function getChartHR(string $type, int $patientId, DateTime $from, DateTime $to): array
     {
-        if($type === 'chair') {
+        if ($type === 'chair') {
             $statement = $this->db->prepare(<<<SQL
                 SELECT
                     chm.hr,
@@ -41,7 +41,6 @@ class HRRepository
                 ORDER BY
                     chm.id;
             SQL);
-            //ON to warunek łączenia
 
             $statement->execute([
                 'patientId' => $patientId,
@@ -51,7 +50,7 @@ class HRRepository
 
             return $statement->fetchAll(PDO::FETCH_ASSOC);
         }
-        else if($type === 'bathtub') {
+        else if ($type === 'bathtub') {
             $statement = $this->db->prepare(<<<SQL
                 SELECT
                     bm.hr,
@@ -86,7 +85,7 @@ class HRRepository
     //HRV
     public function getHRV(string $type, int $patientId, DateTime $from, DateTime $to): string
     {
-        if($type === 'chair') {
+        if ($type === 'chair') {
             $statement = $this->db->prepare(<<<SQL
             SELECT
                 round(stddev_pop(chm.hr), 2)
@@ -115,7 +114,7 @@ class HRRepository
 
             return $statement->fetchColumn();
         }
-        else if($type === 'bathtub') {
+        else if ($type === 'bathtub') {
             $statement = $this->db->prepare(<<<SQL
                 SELECT
                 round(stddev_pop(bm.hr), 2)
@@ -149,7 +148,7 @@ class HRRepository
     //CURRENT
     public function getCurrentHR(string $type, int $patientId): ?int
     {
-        if($type === 'chair') {
+        if ($type === 'chair') {
             $statement = $this->db->prepare(<<<SQL
                 SELECT
                     chm.hr
@@ -177,7 +176,7 @@ class HRRepository
 
             return $statement->fetchColumn() ?: null;
 
-        } else if($type === 'bathtub') {
+        } else if ($type === 'bathtub') {
             $statement = $this->db->prepare(<<<SQL
                 SELECT
                     bm.hr
@@ -203,9 +202,6 @@ class HRRepository
                 'patientId' => $patientId
             ]);
 
-            //Jeśli metoda `fetchColumn()` zwróci wartość różną od null, zostanie ona zwrócona.
-            // W przeciwnym wypadku zostanie zwrócona wartość null.
-//            return $statement->fetchColumn() else return null;
             return $statement->fetchColumn() ?: null;
         }
     }
@@ -213,7 +209,7 @@ class HRRepository
     //MINIMUM
     public function getMinimumHR(string $type, int $patientId, DateTime $from, DateTime $to): int
     {
-        if($type === 'chair') {
+        if ($type === 'chair') {
             $statement = $this->db->prepare(<<<SQL
                 SELECT
                     chm.hr
@@ -243,7 +239,7 @@ class HRRepository
 
             return $statement->fetchColumn();
         }
-        else if($type === 'bathtub') {
+        else if ($type === 'bathtub') {
             $statement = $this->db->prepare(<<<SQL
                 SELECT
                     bm.hr
@@ -278,7 +274,7 @@ class HRRepository
     //MAXIMUM
     public function getMaximumHR(string $type, int $patientId, DateTime $from, DateTime $to): int
     {
-        if($type === 'chair') {
+        if ($type === 'chair') {
             $statement = $this->db->prepare(<<<SQL
                 SELECT
                     chm.hr
@@ -308,7 +304,7 @@ class HRRepository
 
             return $statement->fetchColumn();
         }
-        else if($type === 'bathtub') {
+        else if ($type === 'bathtub') {
             $statement = $this->db->prepare(<<<SQL
                 SELECT
                     bm.hr
@@ -343,7 +339,7 @@ class HRRepository
     //AVERAGE
     public function getAverageHR(string $type, int $patientId, DateTime $from, DateTime $to):int
     {
-        if($type === 'chair') {
+        if ($type === 'chair') {
             $statement = $this->db->prepare(<<<SQL
                 SELECT
                     (sum(chm.hr)/count(chm.hr)) as av
@@ -371,7 +367,7 @@ class HRRepository
 
             return $statement->fetchColumn();
         }
-        else if($type === 'bathtub') {
+        else if ($type === 'bathtub') {
             $statement = $this->db->prepare(<<<SQL
                 SELECT
                     (sum(bm.hr)/count(bm.hr)) as av
