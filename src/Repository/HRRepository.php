@@ -103,7 +103,7 @@ class HRRepository
                 WHERE
                         p.id = :patientId
                 ORDER BY
-                    chm.id 
+                    chm.id DESC
                 LIMIT 1;
         SQL
         );
@@ -134,7 +134,7 @@ class HRRepository
                 WHERE
                         p.id = :patientId
                 ORDER BY
-                    bm.id 
+                    bm.id DESC
                 LIMIT 1;
         SQL);
 
