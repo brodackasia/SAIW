@@ -136,35 +136,6 @@
         </form>
       </div>
 
-      <div class="row mt-5 mb-3">
-        <span class="d-link-block col-lg-5 mx-auto" tabindex="0" data-toggle="tooltip" title="Parametr wyznaczony dla serii wartości rytmu serca">
-          <div class="form-group">
-            <legend>Parametr zmienności:</legend>
-            <div class="card text-white bg-info mt-3 mb-3" style="max-width: 24rem;">
-<!--              <h4 class="card-title text-center">test</h4>-->
-              <div v-for="responseHRV in HRV" id="hrv" class="card-body">
-                    <h4 class="card-title text-center">{{responseHRV}}</h4>
-              </div>
-            </div>
-          </div>
-        </span>
-        <span class="d-link-block col-lg-5 mx-auto" tabindex="0" data-toggle="tooltip" title="Podane wartości są przybliżone i mogą różnić się w zależności od diety, aktywności fizycznej i wielu innych czynników">
-          <div class="form-group">
-            <legend>Wartości referencyjne:</legend>
-            <div class="card text-white bg-info mt-3 mb-3" style="max-width: 24rem;">
-              <div class="card-body" id="btn7">
-                <h6>
-                  Dzieci – ok. 100 uderzeń na minutę <br>
-                  Młodzież – ok. 85 uderzeń na minutę <br>
-                  Dorośli – ok. 70 uderzeń na minutę <br>
-                  Seniorzy  – ok. 60 uderzeń na minutę <br>
-                </h6>
-              </div>
-            </div>
-          </div>
-        </span>
-      </div>
-
       <div class="form-group col-lg-8 mt-5 mb-5 mx-auto" id="myChart" style="background-color: #5FA37E">
         <ChartsHR
           :matType="matType"
@@ -196,7 +167,6 @@ export default {
       maximumHR: ['-'],
       currentHR: ['-'],
       averageHR: ['-'],
-      HRV: ['-'],
       patients: {},
       matType: null,
       patientId: null,
@@ -256,17 +226,6 @@ export default {
               }}
         );
         this.averageHR = responseAverageHr.data;
-
-        //HRV
-        const responseHRV = await axios.get(
-            'http://localhost:8000/hr/hrv/' + this.matType,
-            { params: {
-                patientId: this.patientId,
-                from: this.fromDay + " " + this.fromHour,
-                to: this.toDay + " " + this.toHour,
-              }}
-        );
-        this.HRV = responseHRV.data;
 
         //CHART
         await this.$refs.chartsHRref.showChart()

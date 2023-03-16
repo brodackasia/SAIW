@@ -4,9 +4,10 @@ declare(strict_types=1);
 
 namespace App\Service;
 
+use App\Const\MatTypeConst;
 use App\Repository\HRRepository;
 use DateTime;
-
+use Exception;
 class HRService
 {
     private HRRepository $HRRepository;
@@ -16,33 +17,67 @@ class HRService
         $this->HRRepository = $HRRepository;
     }
 
-    public function getChartHR(string $type, DateTime $from, DateTime $to, int $patientId): array
+    public function getChartData(string $type, DateTime $from, DateTime $to, int $patientId): array
     {
-        return $this->HRRepository->getChartHR($type, $patientId, $from, $to);
-    }
-
-    public function getHRV(string $type, DateTime $from, DateTime $to, int $patientId): string
-    {
-        return $this->HRRepository->getHRV($type, $patientId, $from, $to);
+        switch ($type) {
+            case MatTypeConst::BATHTUB:
+                return $this->HRRepository->getBathChartData($patientId, $from, $to);
+            case MatTypeConst::CHAIR:
+                return $this->HRRepository->getChairChartData($patientId, $from, $to);
+            default:
+                throw new Exception("Invalid parameter type!");
+        }
     }
 
     public function getCurrentHR(string $type, int $patientId): ?int
     {
-        return $this->HRRepository->getCurrentHR($type, $patientId);
+        switch ($type) {
+            case MatTypeConst::BATHTUB:
+                return $this->HRRepository->getBathCurrentHR($patientId);
+            case MatTypeConst::CHAIR:
+                return $this->HRRepository->getChairCurrentHR($patientId);
+            default:
+                throw new Exception("Invalid parameter type!");
+        }
     }
 
     public function getMinimumHR(string $type, DateTime $from, DateTime $to, int $patientId): int
     {
-        return $this->HRRepository->getMinimumHR($type, $patientId, $from, $to);
+        switch ($type) {
+            case MatTypeConst::BATHTUB:
+                return $this->HRRepository->getBathMinimumHR($patientId, $from, $to);
+            case MatTypeConst::CHAIR:
+                return $this->HRRepository->getChairMinimumHR($patientId, $from, $to);
+            default:
+                throw new Exception("Invalid parameter type!");
+        }
     }
 
     public function getMaximumHR(string $type, DateTime $from, DateTime $to, int $patientId): int
     {
-        return $this->HRRepository->getMaximumHR($type, $patientId, $from, $to);
+        switch ($type) {
+            case MatTypeConst::BATHTUB:
+                return $this->HRRepository->getBathMaximumHR($patientId, $from, $to);
+            case MatTypeConst::CHAIR:
+                return $this->HRRepository->getChairMaximumHR($patientId, $from, $to);
+            default:
+                throw new Exception("Invalid parameter type!");
+        }
     }
 
     public function getAverageHR(string $type, DateTime $from, DateTime $to, int $patientId): int
     {
-        return $this->HRRepository->getAverageHR($type, $patientId, $from, $to);
+        switch ($type) {
+            case MatTypeConst::BATHTUB:
+                return $this->HRRepository->getBathAverageHR($patientId, $from, $to);
+            case MatTypeConst::CHAIR:
+                return $this->HRRepository->getChairAverageHR($patientId, $from, $to);
+            default:
+                throw new Exception("Invalid parameter type!");
+        }
     }
 }
+
+
+
+
