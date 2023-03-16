@@ -118,8 +118,8 @@ export default {
           'http://localhost:8000/hr/chart/' + this.matType,
           { params: {
               patientId: this.patientId,
-              from: this.fromDay + " " + this.toHour,
-              to: this.toDay + " " + this.fromHour,
+              from: this.fromDay + " " + this.fromHour,
+              to: this.toDay + " " + this.toHour,
             }}
         );
 
