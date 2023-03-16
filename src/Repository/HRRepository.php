@@ -18,10 +18,9 @@ class HRRepository
     }
 
     //CHART
-    public function getChartHR(string $type, int $patientId, DateTime $from, DateTime $to): array
+    public function getChairChartData(int $patientId, DateTime $from, DateTime $to): array
     {
-        if ($type === 'chair') {
-            $statement = $this->db->prepare(<<<SQL
+        $statement = $this->db->prepare(<<<SQL
                 SELECT
                     chm.hr,
                     TO_CHAR(chm."time", 'yyyy-mm-dd hh24:mi') AS time
@@ -39,26 +38,28 @@ class HRRepository
                 WHERE
                         p.id = :patientId
                 ORDER BY
-                    chm.id;
+                    chm."time";
             SQL);
 
-            $statement->execute([
-                'patientId' => $patientId,
-                'dateTimeFrom' => $from->format('Y-m-d H:i'),
-                'dateTimeTo' => $to->format('Y-m-d H:i'),
-            ]);
+        $statement->execute([
+            'patientId' => $patientId,
+            'dateTimeFrom' => $from->format('Y-m-d H:i'),
+            'dateTimeTo' => $to->format('Y-m-d H:i'),
+        ]);
 
-            return $statement->fetchAll(PDO::FETCH_ASSOC);
-        }
-        else if ($type === 'bathtub') {
-            $statement = $this->db->prepare(<<<SQL
+        return $statement->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    public function getBathChartData(int $patientId, DateTime $from, DateTime $to): array
+    {
+        $statement = $this->db->prepare(<<<SQL
                 SELECT
                     bm.hr,
                     TO_CHAR(bm."time", 'yyyy-mm-dd hh24:mi') AS time
                 FROM
                     patient AS p
                 INNER JOIN
-                    hub_assignment_date AS had ON had.patient_id = p.id
+                    hub_assignment_date AS had ON had.patient_id = p.id 
                         AND had.ends_at AT TIME ZONE 'UTC-1' >= NOW()
                         AND had.starts_at AT TIME ZONE 'UTC-1' <= NOW()
                 INNER JOIN
@@ -69,87 +70,23 @@ class HRRepository
                 WHERE
                         p.id = :patientId
                 ORDER BY
-                    bm.id;
-        SQL);
+                    bm."time";
+            SQL);
 
-            $statement->execute([
-                'patientId' => $patientId,
-                'dateTimeFrom' => $from->format('Y-m-d H:i'),
-                'dateTimeTo' => $to->format('Y-m-d H:i'),
-            ]);
+        $statement->execute([
+            'patientId' => $patientId,
+            'dateTimeFrom' => $from->format('Y-m-d H:i'),
+            'dateTimeTo' => $to->format('Y-m-d H:i'),
+        ]);
 
-            return $statement->fetchAll(PDO::FETCH_ASSOC);
-        }
-    }
-
-    //HRV
-    public function getHRV(string $type, int $patientId, DateTime $from, DateTime $to): string
-    {
-        if ($type === 'chair') {
-            $statement = $this->db->prepare(<<<SQL
-            SELECT
-                round(stddev_pop(chm.hr), 2)
-            FROM
-                patient AS p
-            INNER JOIN
-                hub_assignment_date AS had ON had.patient_id = p.id
-                    AND had.ends_at AT TIME ZONE 'UTC-1' >= NOW()
-                    AND had.starts_at AT TIME ZONE 'UTC-1' <= NOW()
-            INNER JOIN
-                e4l_id_conv AS h ON h.id = had.hub_id
-            INNER JOIN
-                chair_measurements AS chm ON chm.host = h.hub
-                    AND time AT TIME ZONE 'UTC-1' between :dateTimeFrom AND :dateTimeTo
-            WHERE
-                p.id = :patientId
-            GROUP BY
-                had.patient_id;
-        SQL);
-
-            $statement->execute([
-                'patientId' => $patientId,
-                'dateTimeFrom' => $from->format('Y-m-d H:i'),
-                'dateTimeTo' => $to->format('Y-m-d H:i'),
-            ]);
-
-            return $statement->fetchColumn();
-        }
-        else if ($type === 'bathtub') {
-            $statement = $this->db->prepare(<<<SQL
-                SELECT
-                round(stddev_pop(bm.hr), 2)
-            FROM
-                patient AS p
-            INNER JOIN
-                hub_assignment_date AS had ON had.patient_id = p.id
-                    AND had.ends_at AT TIME ZONE 'UTC-1' >= NOW()
-                    AND had.starts_at AT TIME ZONE 'UTC-1' <= NOW()
-            INNER JOIN
-                e4l_id_conv AS h ON h.id = had.hub_id
-            INNER JOIN
-                bathtub_measurements AS bm ON bm.host = h.hub
-                    AND time AT TIME ZONE 'UTC-1' between :dateTimeFrom AND :dateTimeTo
-            WHERE
-                    p.id = :patientId
-            GROUP BY
-                had.patient_id;
-        SQL);
-
-            $statement->execute([
-                'patientId' => $patientId,
-                'dateTimeFrom' => $from->format('Y-m-d H:i'),
-                'dateTimeTo' => $to->format('Y-m-d H:i'),
-            ]);
-
-            return $statement->fetchColumn();
-        }
+        return $statement->fetchAll(PDO::FETCH_ASSOC);
     }
 
     //CURRENT
-    public function getCurrentHR(string $type, int $patientId): ?int
+    public function getChairCurrentHR(int $patientId): ?int
     {
-        if ($type === 'chair') {
-            $statement = $this->db->prepare(<<<SQL
+        $statement = $this->db->prepare(
+            <<<SQL
                 SELECT
                     chm.hr
                 FROM
@@ -168,16 +105,19 @@ class HRRepository
                 ORDER BY
                     chm.id DESC
                 LIMIT 1;
-        SQL);
+        SQL
+        );
 
-            $statement->execute([
-                'patientId' => $patientId
-            ]);
+        $statement->execute([
+            'patientId' => $patientId
+        ]);
 
-            return $statement->fetchColumn() ?: null;
+        return $statement->fetchColumn() ?: null;
+    }
 
-        } else if ($type === 'bathtub') {
-            $statement = $this->db->prepare(<<<SQL
+    public function getBathCurrentHR(int $patientId): ?int
+    {
+        $statement = $this->db->prepare(<<<SQL
                 SELECT
                     bm.hr
                 FROM
@@ -198,18 +138,16 @@ class HRRepository
                 LIMIT 1;
         SQL);
 
-            $statement->execute([
-                'patientId' => $patientId
-            ]);
+        $statement->execute([
+            'patientId' => $patientId
+        ]);
 
-            return $statement->fetchColumn() ?: null;
-        }
+        return $statement->fetchColumn() ?: null;
     }
 
     //MINIMUM
-    public function getMinimumHR(string $type, int $patientId, DateTime $from, DateTime $to): int
+    public function getChairMinimumHR(int $patientId, DateTime $from, DateTime $to): int
     {
-        if ($type === 'chair') {
             $statement = $this->db->prepare(<<<SQL
                 SELECT
                     chm.hr
@@ -231,16 +169,18 @@ class HRRepository
                 LIMIT 1;
         SQL);
 
-            $statement->execute([
-                'patientId' => $patientId,
-                'dateTimeFrom' => $from->format('Y-m-d H:i'),
-                'dateTimeTo' => $to->format('Y-m-d H:i'),
-            ]);
+        $statement->execute([
+            'patientId' => $patientId,
+            'dateTimeFrom' => $from->format('Y-m-d H:i'),
+            'dateTimeTo' => $to->format('Y-m-d H:i'),
+        ]);
 
-            return $statement->fetchColumn();
-        }
-        else if ($type === 'bathtub') {
-            $statement = $this->db->prepare(<<<SQL
+        return $statement->fetchColumn();
+    }
+
+    public function getBathMinimumHR(int $patientId, DateTime $from, DateTime $to): int
+    {
+        $statement = $this->db->prepare(<<<SQL
                 SELECT
                     bm.hr
                 FROM
@@ -261,21 +201,20 @@ class HRRepository
                 LIMIT 1;
         SQL);
 
-            $statement->execute([
-                'patientId' => $patientId,
-                'dateTimeFrom' => $from->format('Y-m-d H:i'),
-                'dateTimeTo' => $to->format('Y-m-d H:i'),
-            ]);
+        $statement->execute([
+            'patientId' => $patientId,
+            'dateTimeFrom' => $from->format('Y-m-d H:i'),
+            'dateTimeTo' => $to->format('Y-m-d H:i'),
+        ]);
 
-            return $statement->fetchColumn();
-        }
+        return $statement->fetchColumn();
     }
 
     //MAXIMUM
-    public function getMaximumHR(string $type, int $patientId, DateTime $from, DateTime $to): int
+    public function getChairMaximumHR(int $patientId, DateTime $from, DateTime $to): int
     {
-        if ($type === 'chair') {
-            $statement = $this->db->prepare(<<<SQL
+        $statement = $this->db->prepare(
+            <<<SQL
                 SELECT
                     chm.hr
                 FROM
@@ -294,18 +233,21 @@ class HRRepository
                 ORDER BY
                     chm.hr DESC
                 LIMIT 1;
-        SQL);
+        SQL
+        );
 
-            $statement->execute([
-                'patientId' => $patientId,
-                'dateTimeFrom' => $from->format('Y-m-d H:i'),
-                'dateTimeTo' => $to->format('Y-m-d H:i'),
-            ]);
+        $statement->execute([
+            'patientId' => $patientId,
+            'dateTimeFrom' => $from->format('Y-m-d H:i'),
+            'dateTimeTo' => $to->format('Y-m-d H:i'),
+        ]);
 
-            return $statement->fetchColumn();
-        }
-        else if ($type === 'bathtub') {
-            $statement = $this->db->prepare(<<<SQL
+        return $statement->fetchColumn();
+    }
+
+    public function getBathMaximumHR(int $patientId, DateTime $from, DateTime $to): int
+    {
+        $statement = $this->db->prepare(<<<SQL
                 SELECT
                     bm.hr
                 FROM
@@ -326,20 +268,18 @@ class HRRepository
                 LIMIT 1;
         SQL);
 
-            $statement->execute([
-                'patientId' => $patientId,
-                'dateTimeFrom' => $from->format('Y-m-d H:i'),
-                'dateTimeTo' => $to->format('Y-m-d H:i'),
-            ]);
+        $statement->execute([
+            'patientId' => $patientId,
+            'dateTimeFrom' => $from->format('Y-m-d H:i'),
+            'dateTimeTo' => $to->format('Y-m-d H:i'),
+        ]);
 
-            return $statement->fetchColumn();
-        }
+        return $statement->fetchColumn();
     }
 
     //AVERAGE
-    public function getAverageHR(string $type, int $patientId, DateTime $from, DateTime $to):int
+    public function getChairAverageHR(int $patientId, DateTime $from, DateTime $to):int
     {
-        if ($type === 'chair') {
             $statement = $this->db->prepare(<<<SQL
                 SELECT
                     (sum(chm.hr)/count(chm.hr)) as av
@@ -359,16 +299,18 @@ class HRRepository
                 LIMIT 1;
         SQL);
 
-            $statement->execute([
-                'patientId' => $patientId,
-                'dateTimeFrom' => $from->format('Y-m-d H:i'),
-                'dateTimeTo' => $to->format('Y-m-d H:i'),
-            ]);
+        $statement->execute([
+            'patientId' => $patientId,
+            'dateTimeFrom' => $from->format('Y-m-d H:i'),
+            'dateTimeTo' => $to->format('Y-m-d H:i'),
+        ]);
 
-            return $statement->fetchColumn();
-        }
-        else if ($type === 'bathtub') {
-            $statement = $this->db->prepare(<<<SQL
+        return $statement->fetchColumn();
+    }
+
+    public function getBathAverageHR(int $patientId, DateTime $from, DateTime $to):int
+    {
+        $statement = $this->db->prepare(<<<SQL
                 SELECT
                     (sum(bm.hr)/count(bm.hr)) as av
                 FROM
@@ -387,13 +329,12 @@ class HRRepository
                 LIMIT 1;
         SQL);
 
-            $statement->execute([
-                'patientId' => $patientId,
-                'dateTimeFrom' => $from->format('Y-m-d H:i'),
-                'dateTimeTo' => $to->format('Y-m-d H:i'),
-            ]);
+        $statement->execute([
+            'patientId' => $patientId,
+            'dateTimeFrom' => $from->format('Y-m-d H:i'),
+            'dateTimeTo' => $to->format('Y-m-d H:i'),
+        ]);
 
-            return $statement->fetchColumn();
-        }
+        return $statement->fetchColumn();
     }
 }
