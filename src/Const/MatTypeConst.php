@@ -6,9 +6,9 @@ namespace App\Const;
 
 class MatTypeConst
 {
-    public const BATHTUB = "bathtub";
+    public const BATHTUB = 'bathtub';
 
-    public const CHAIR = "chair";
+    public const CHAIR = 'chair';
 
     public const ALL_TYPES = [
         self::BATHTUB,
