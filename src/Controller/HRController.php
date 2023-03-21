@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace App\Controller;
 
-use App\Const\MatTypeConst;
+use App\CurrentHRQuery\CurrentHRFactory\CurrentHrQueryFactory;
+use App\Query\Factory\HrQueryFactory;
 use App\Service\HRService;
-use DateTime;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
@@ -23,213 +23,78 @@ class HRController extends AbstractController
         $this->HRService = $HRService;
     }
 
-    //VALIDATING PATIENT ID
-    public function patientIdValidation(int $patientId): bool
-    {
-        return !(
-            is_null($patientId)
-            || !is_numeric($patientId)
-        );
-    }
-
-    //VALIDATING TO AND FROM PARAMETERS
-    public function fromAndToValidation(string $from, string $to): bool
-    {
-        return !(
-            is_null($to)
-            || is_null($from)
-            || !DateTime::createFromFormat('Y-m-d H:i', $from)
-            || !DateTime::createFromFormat('Y-m-d H:i', $to)
-        );
-    }
-
-    //VALIDATING TYPE OF MAT
-    public function typeOfMatValidation(string $type): bool
-    {
-        return (
-            in_array($type, MatTypeConst::ALL_TYPES)
-        );
-    }
-
     //CHART
     #[Route('/chart/{type}', name: 'hr.chart', methods: ['GET'])]
     public function chartData(Request $request, string $type): Response
     {
-        //pobieranie parametru z requestu
-        $patientId = $request->query->get('patientId');
-        $from = $request->query->get('from');
-        $to = $request->query->get('to');
+        $query = HrQueryFactory::createFromQueryParameters(
+            $request->query->all()
+        );
 
-        //wywolanie funkcji walidacji x3
-        if (!$this->patientIdValidation((int)$patientId)) {
-            return new Response(
-                'Invalid parameter "patientId"!',
-                Response::HTTP_BAD_REQUEST
-            );
-        }
-
-        if (!$this->fromAndToValidation($from, $to)) {
-            return new Response(
-                'Invalid parameter "from" or "to"!',
-                Response::HTTP_BAD_REQUEST
-            );
-        }
-
-        if (!$this->typeOfMatValidation($type)) {
-            return new Response(
-                'Invalid parameter "type"!',
-                Response::HTTP_BAD_REQUEST
-            );
-        }
-
-        $to = DateTime::createFromFormat('Y-m-d H:i', $to);
-        $from = DateTime::createFromFormat('Y-m-d H:i', $from);
+        $query->setType($type);
 
         return new JsonResponse(
-            $this->HRService->getChartData($type, $from, $to, (int)$patientId)
-       );
+            $this->HRService->getChartData($query),
+        );
     }
 
     //CURRENT
     #[Route('/current/{type}', name: 'hr.current', methods: ['GET'])]
     public function currentHr(Request $request, string $type): Response
     {
-        $patientId = $request->query->get('patientId');
+        $query = CurrentHrQueryFactory::createFromCurrentQueryParameters(
+            $request->query->all()
+        );
 
-        //wywolanie funkcji walidacji x2
-        if (!$this->patientIdValidation((int)$patientId)) {
-            return new Response(
-                'Invalid parameter "patientId"!',
-                Response::HTTP_BAD_REQUEST
-            );
-        }
+        $query->setType($type);
 
-        if (!$this->typeOfMatValidation($type)) {
-            return new Response(
-                'Invalid parameter "type"!',
-                Response::HTTP_BAD_REQUEST
-            );
-        }
-
-        return new JsonResponse([
-            'hr' => $this->HRService->getCurrentHR($type, (int)$patientId)
-        ]);
+        return new JsonResponse(
+            $this->HRService->getCurrentHR($query),
+        );
     }
 
     //MINIMUM
     #[Route('/minimum/{type}', name: 'hr.minimum', methods: ['GET'])]
     public function minimumHr(Request $request, string $type): Response
     {
-        //pobieranie parametru z requestu
-        $patientId = $request->query->get('patientId');
-        $from = $request->query->get('from');
-        $to = $request->query->get('to');
+        $query = HrQueryFactory::createFromQueryParameters(
+            $request->query->all()
+        );
 
-        //wywolanie funkcji walidacji x3
-        if (!$this->patientIdValidation((int)$patientId)) {
-            return new Response(
-                'Invalid parameter "patientId"!',
-                Response::HTTP_BAD_REQUEST
-            );
-        }
+        $query->setType($type);
 
-        if (!$this->fromAndToValidation($from, $to)) {
-            return new Response(
-                'Invalid parameter "from" or "to"!',
-                Response::HTTP_BAD_REQUEST
-            );
-        }
-
-        if (!$this->typeOfMatValidation($type)) {
-            return new Response(
-                'Invalid parameter "type"!',
-                Response::HTTP_BAD_REQUEST
-            );
-        }
-
-        $to = DateTime::createFromFormat('Y-m-d H:i', $to);
-        $from = DateTime::createFromFormat('Y-m-d H:i', $from);
-
-        return new JsonResponse([
-            'hr' => $this->HRService->getMinimumHR($type, $from, $to, (int)$patientId)
-        ]);
+        return new JsonResponse(
+            $this->HRService->getMinimumHR($query),
+        );
     }
 
     //MAXIMUM
     #[Route('/maximum/{type}', name: 'hr.maximum', methods: ['GET'])]
     public function maximumHr(Request $request, string $type): Response
     {
-        //pobieranie parametru z requestu
-        $patientId = $request->query->get('patientId');
-        $from = $request->query->get('from');
-        $to = $request->query->get('to');
+        $query = HrQueryFactory::createFromQueryParameters(
+            $request->query->all()
+        );
 
-        //wywolanie funkcji walidacji x3
-        if (!$this->patientIdValidation((int)$patientId)) {
-            return new Response(
-                'Invalid parameter "patientId"!',
-                Response::HTTP_BAD_REQUEST
-            );
-        }
+        $query->setType($type);
 
-        if (!$this->fromAndToValidation($from, $to)) {
-            return new Response(
-                'Invalid parameter "from" or "to"!',
-                Response::HTTP_BAD_REQUEST
-            );
-        }
-
-        if (!$this->typeOfMatValidation($type)) {
-            return new Response(
-                'Invalid parameter "type"!',
-                Response::HTTP_BAD_REQUEST
-            );
-        }
-
-        $to = DateTime::createFromFormat('Y-m-d H:i', $to);
-        $from = DateTime::createFromFormat('Y-m-d H:i', $from);
-
-        return new JsonResponse([
-            'hr' => $this->HRService->getMaximumHR($type, $from, $to, (int)$patientId)
-        ]);
+        return new JsonResponse(
+            $this->HRService->getMaximumHR($query),
+        );
     }
 
     //AVERAGE
     #[Route('/average/{type}', name: 'hr.average', methods: ['GET'])]
     public function averageHr(Request $request, string $type): Response
     {
-        //pobieranie parametru z requestu
-        $patientId = $request->query->get('patientId');
-        $from = $request->query->get('from');
-        $to = $request->query->get('to');
+        $query = HrQueryFactory::createFromQueryParameters(
+            $request->query->all()
+        );
 
-        //wywolanie funkcji walidacji x3
-        if (!$this->patientIdValidation((int)$patientId)) {
-            return new Response(
-                'Invalid parameter "patientId"!',
-                Response::HTTP_BAD_REQUEST
-            );
-        }
+        $query->setType($type);
 
-        if (!$this->fromAndToValidation($from, $to)) {
-            return new Response(
-                'Invalid parameter "from" or "to"!',
-                Response::HTTP_BAD_REQUEST
-            );
-        }
-
-        if (!$this->typeOfMatValidation($type)) {
-            return new Response(
-                'Invalid parameter "type"!',
-                Response::HTTP_BAD_REQUEST
-            );
-        }
-
-        $to = DateTime::createFromFormat('Y-m-d H:i', $to);
-        $from = DateTime::createFromFormat('Y-m-d H:i', $from);
-
-        return new JsonResponse([
-            'hr' => $this->HRService->getAverageHR($type, $from, $to, (int)$patientId)
-        ]);
+        return new JsonResponse(
+            $this->HRService->getAverageHR($query),
+        );
     }
 }

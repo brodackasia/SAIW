@@ -4,8 +4,9 @@ declare(strict_types=1);
 
 namespace App\Repository;
 
+use App\CurrentHRQuery\CurrentHrQuery;
 use App\Database\Connection;
-use DateTime;
+use App\Query\HrQuery;
 use PDO;
 
 class HRRepository
@@ -18,7 +19,7 @@ class HRRepository
     }
 
     //CHART
-    public function getChairChartData(int $patientId, DateTime $from, DateTime $to): array
+    public function getChairChartData(HrQuery $query): array
     {
         $statement = $this->db->prepare(<<<SQL
                 SELECT
@@ -42,15 +43,15 @@ class HRRepository
             SQL);
 
         $statement->execute([
-            'patientId' => $patientId,
-            'dateTimeFrom' => $from->format('Y-m-d H:i'),
-            'dateTimeTo' => $to->format('Y-m-d H:i'),
+            'patientId' => $query->getPatientId(),
+            'dateTimeFrom' => $query->getFrom(),
+            'dateTimeTo' => $query->getTo()
         ]);
 
         return $statement->fetchAll(PDO::FETCH_ASSOC);
     }
 
-    public function getBathChartData(int $patientId, DateTime $from, DateTime $to): array
+    public function getBathChartData(HrQuery $query): array
     {
         $statement = $this->db->prepare(<<<SQL
                 SELECT
@@ -74,16 +75,16 @@ class HRRepository
             SQL);
 
         $statement->execute([
-            'patientId' => $patientId,
-            'dateTimeFrom' => $from->format('Y-m-d H:i'),
-            'dateTimeTo' => $to->format('Y-m-d H:i'),
+            'patientId' => $query->getPatientId(),
+            'dateTimeFrom' => $query->getFrom(),
+            'dateTimeTo' => $query->getTo()
         ]);
 
         return $statement->fetchAll(PDO::FETCH_ASSOC);
     }
 
     //CURRENT
-    public function getChairCurrentHR(int $patientId): ?int
+    public function getChairCurrentHR(CurrentHrQuery $currentQuery): ?int
     {
         $statement = $this->db->prepare(
             <<<SQL
@@ -109,13 +110,13 @@ class HRRepository
         );
 
         $statement->execute([
-            'patientId' => $patientId
+            'patientId' => $currentQuery->getPatientId(),
         ]);
 
         return $statement->fetchColumn() ?: null;
     }
 
-    public function getBathCurrentHR(int $patientId): ?int
+    public function getBathCurrentHR(CurrentHrQuery $currentQuery): ?int
     {
         $statement = $this->db->prepare(<<<SQL
                 SELECT
@@ -139,14 +140,14 @@ class HRRepository
         SQL);
 
         $statement->execute([
-            'patientId' => $patientId
+            'patientId' => $currentQuery->getPatientId()
         ]);
 
         return $statement->fetchColumn() ?: null;
     }
 
     //MINIMUM
-    public function getChairMinimumHR(int $patientId, DateTime $from, DateTime $to): int
+    public function getChairMinimumHR(HrQuery $query): int
     {
             $statement = $this->db->prepare(<<<SQL
                 SELECT
@@ -170,15 +171,15 @@ class HRRepository
         SQL);
 
         $statement->execute([
-            'patientId' => $patientId,
-            'dateTimeFrom' => $from->format('Y-m-d H:i'),
-            'dateTimeTo' => $to->format('Y-m-d H:i'),
+            'patientId' => $query->getPatientId(),
+            'dateTimeFrom' => $query->getFrom(),
+            'dateTimeTo' => $query->getTo()
         ]);
 
         return $statement->fetchColumn();
     }
 
-    public function getBathMinimumHR(int $patientId, DateTime $from, DateTime $to): int
+    public function getBathMinimumHR(HrQuery $query): int
     {
         $statement = $this->db->prepare(<<<SQL
                 SELECT
@@ -202,16 +203,16 @@ class HRRepository
         SQL);
 
         $statement->execute([
-            'patientId' => $patientId,
-            'dateTimeFrom' => $from->format('Y-m-d H:i'),
-            'dateTimeTo' => $to->format('Y-m-d H:i'),
+            'patientId' => $query->getPatientId(),
+            'dateTimeFrom' => $query->getFrom(),
+            'dateTimeTo' => $query->getTo()
         ]);
 
         return $statement->fetchColumn();
     }
 
     //MAXIMUM
-    public function getChairMaximumHR(int $patientId, DateTime $from, DateTime $to): int
+    public function getChairMaximumHR(HrQuery $query): int
     {
         $statement = $this->db->prepare(
             <<<SQL
@@ -237,15 +238,15 @@ class HRRepository
         );
 
         $statement->execute([
-            'patientId' => $patientId,
-            'dateTimeFrom' => $from->format('Y-m-d H:i'),
-            'dateTimeTo' => $to->format('Y-m-d H:i'),
+            'patientId' => $query->getPatientId(),
+            'dateTimeFrom' => $query->getFrom(),
+            'dateTimeTo' => $query->getTo()
         ]);
 
         return $statement->fetchColumn();
     }
 
-    public function getBathMaximumHR(int $patientId, DateTime $from, DateTime $to): int
+    public function getBathMaximumHR(HrQuery $query): int
     {
         $statement = $this->db->prepare(<<<SQL
                 SELECT
@@ -269,16 +270,16 @@ class HRRepository
         SQL);
 
         $statement->execute([
-            'patientId' => $patientId,
-            'dateTimeFrom' => $from->format('Y-m-d H:i'),
-            'dateTimeTo' => $to->format('Y-m-d H:i'),
+            'patientId' => $query->getPatientId(),
+            'dateTimeFrom' => $query->getFrom(),
+            'dateTimeTo' => $query->getTo()
         ]);
 
         return $statement->fetchColumn();
     }
 
     //AVERAGE
-    public function getChairAverageHR(int $patientId, DateTime $from, DateTime $to):int
+    public function getChairAverageHR(HrQuery $query):int
     {
             $statement = $this->db->prepare(<<<SQL
                 SELECT
@@ -300,15 +301,15 @@ class HRRepository
         SQL);
 
         $statement->execute([
-            'patientId' => $patientId,
-            'dateTimeFrom' => $from->format('Y-m-d H:i'),
-            'dateTimeTo' => $to->format('Y-m-d H:i'),
+            'patientId' => $query->getPatientId(),
+            'dateTimeFrom' => $query->getFrom(),
+            'dateTimeTo' => $query->getTo()
         ]);
 
         return $statement->fetchColumn();
     }
 
-    public function getBathAverageHR(int $patientId, DateTime $from, DateTime $to):int
+    public function getBathAverageHR(HrQuery $query):int
     {
         $statement = $this->db->prepare(<<<SQL
                 SELECT
@@ -330,9 +331,9 @@ class HRRepository
         SQL);
 
         $statement->execute([
-            'patientId' => $patientId,
-            'dateTimeFrom' => $from->format('Y-m-d H:i'),
-            'dateTimeTo' => $to->format('Y-m-d H:i'),
+            'patientId' => $query->getPatientId(),
+            'dateTimeFrom' => $query->getFrom(),
+            'dateTimeTo' => $query->getTo()
         ]);
 
         return $statement->fetchColumn();
