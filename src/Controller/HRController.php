@@ -34,7 +34,7 @@ class HRController extends AbstractController
         $query->setType($type);
 
         return new JsonResponse(
-            $this->HRService->getChartData($query),
+            $this->HRService->getChartData($query)
         );
     }
 
@@ -49,7 +49,7 @@ class HRController extends AbstractController
         $query->setType($type);
 
         return new JsonResponse(
-            $this->HRService->getCurrentHR($query),
+            $this->HRService->getCurrentHR($query)
         );
     }
 
@@ -64,7 +64,7 @@ class HRController extends AbstractController
         $query->setType($type);
 
         return new JsonResponse(
-            $this->HRService->getMinimumHR($query),
+            $this->HRService->getMinimumHR($query)
         );
     }
 
@@ -79,7 +79,7 @@ class HRController extends AbstractController
         $query->setType($type);
 
         return new JsonResponse(
-            $this->HRService->getMaximumHR($query),
+            $this->HRService->getMaximumHR($query)
         );
     }
 
@@ -94,7 +94,7 @@ class HRController extends AbstractController
         $query->setType($type);
 
         return new JsonResponse(
-            $this->HRService->getAverageHR($query),
+            $this->HRService->getAverageHR($query)
         );
     }
 }
