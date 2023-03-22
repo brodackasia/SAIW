@@ -68,4 +68,13 @@ class HrQuery
         return $this;
     }
 
+    public function toArray(HrQuery $query): array
+    {
+        return ([
+            'patientId' => $query->getPatientId(),
+            'dateTimeFrom' => $query->getFrom(),
+            'dateTimeTo' => $query->getTo()
+        ]);
+    }
+
 }

@@ -42,11 +42,9 @@ class HRRepository
                 chm."time";
             SQL);
 
-        $statement->execute([
-            'patientId' => $query->getPatientId(),
-            'dateTimeFrom' => $query->getFrom(),
-            'dateTimeTo' => $query->getTo()
-        ]);
+        $statement->execute(
+            $query->toArray($query)
+        );
 
         return $statement->fetchAll(PDO::FETCH_ASSOC);
     }
@@ -74,11 +72,9 @@ class HRRepository
                 bm."time";
             SQL);
 
-        $statement->execute([
-            'patientId' => $query->getPatientId(),
-            'dateTimeFrom' => $query->getFrom(),
-            'dateTimeTo' => $query->getTo()
-        ]);
+        $statement->execute(
+            $query->toArray($query)
+        );
 
         return $statement->fetchAll(PDO::FETCH_ASSOC);
     }
@@ -168,11 +164,9 @@ class HRRepository
             LIMIT 1;
         SQL);
 
-        $statement->execute([
-            'patientId' => $query->getPatientId(),
-            'dateTimeFrom' => $query->getFrom(),
-            'dateTimeTo' => $query->getTo()
-        ]);
+        $statement->execute(
+            $query->toArray($query)
+        );
 
         return $statement->fetchColumn();
     }
@@ -200,11 +194,9 @@ class HRRepository
             LIMIT 1;
         SQL);
 
-        $statement->execute([
-            'patientId' => $query->getPatientId(),
-            'dateTimeFrom' => $query->getFrom(),
-            'dateTimeTo' => $query->getTo()
-        ]);
+        $statement->execute(
+            $query->toArray($query)
+        );
 
         return $statement->fetchColumn();
     }
@@ -233,11 +225,9 @@ class HRRepository
             LIMIT 1;
         SQL);
 
-        $statement->execute([
-            'patientId' => $query->getPatientId(),
-            'dateTimeFrom' => $query->getFrom(),
-            'dateTimeTo' => $query->getTo()
-        ]);
+        $statement->execute(
+            $query->toArray($query)
+        );
 
         return $statement->fetchColumn();
     }
@@ -265,11 +255,9 @@ class HRRepository
             LIMIT 1;
         SQL);
 
-        $statement->execute([
-            'patientId' => $query->getPatientId(),
-            'dateTimeFrom' => $query->getFrom(),
-            'dateTimeTo' => $query->getTo()
-        ]);
+        $statement->execute(
+            $query->toArray($query)
+        );
 
         return $statement->fetchColumn();
     }
@@ -296,11 +284,9 @@ class HRRepository
             LIMIT 1;
         SQL);
 
-        $statement->execute([
-            'patientId' => $query->getPatientId(),
-            'dateTimeFrom' => $query->getFrom(),
-            'dateTimeTo' => $query->getTo()
-        ]);
+        $statement->execute(
+            $query->toArray($query)
+        );
 
         return $statement->fetchColumn();
     }
@@ -326,11 +312,9 @@ class HRRepository
             LIMIT 1;
         SQL);
 
-        $statement->execute([
-            'patientId' => $query->getPatientId(),
-            'dateTimeFrom' => $query->getFrom(),
-            'dateTimeTo' => $query->getTo()
-        ]);
+        $statement->execute(
+            $query->toArray($query)
+        );
 
         return $statement->fetchColumn();
     }
