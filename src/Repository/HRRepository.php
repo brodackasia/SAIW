@@ -40,7 +40,7 @@ class HRRepository
                     p.id = :patientId
             ORDER BY
                 chm."time";
-            SQL);
+        SQL);
 
         $statement->execute(
             $query->toArray($query)
@@ -70,7 +70,7 @@ class HRRepository
                     p.id = :patientId
             ORDER BY
                 bm."time";
-            SQL);
+        SQL);
 
         $statement->execute(
             $query->toArray($query)
