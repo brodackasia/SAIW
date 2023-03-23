@@ -98,7 +98,9 @@ class HRService
         $errors = $this->validator->validate($query);
 
         if (count($errors) > 0) {
-            throw new Exception($errors[0]->getMessageTemplate());
+            throw new Exception(
+                $errors[0]->getMessageTemplate()
+            );
         }
 
         return null;
@@ -109,7 +111,9 @@ class HRService
         $errors = $this->validator->validate($currentQuery);
 
         if (count($errors) > 0) {
-            throw new Exception($errors[0]->getMessageTemplate());
+            throw new Exception(
+                $errors[0]->getMessageTemplate()
+            );
         }
 
         return null;
