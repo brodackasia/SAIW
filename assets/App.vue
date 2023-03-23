@@ -94,9 +94,7 @@
             <div class="form-group col-lg-3 mx-auto">
               <legend>Aktualna:</legend>
               <div class="card text-white bg-info mt-3 mb-3"  style="max-width: 16rem;">
-                <div v-for="responseCurrentHr in currentHR" id="btn2" class="card-body">
-                  <h4 class="card-title text-center">{{responseCurrentHr}}</h4>
-                </div>
+                <h4 class="card-title text-center mt-3 mb-3">{{currentHR}}</h4>
               </div>
             </div>
 
@@ -104,9 +102,7 @@
               <div class="form-group">
                 <legend>Maksymalna:</legend>
                 <div class="card text-white bg-info mt-3 mb-3"  style="max-width: 16rem;">
-                  <div v-for="responseMaximumHr in maximumHR" id="btn3" class="card-body">
-                    <h4 class="card-title text-center">{{responseMaximumHr}}</h4>
-                  </div>
+                  <h4 class="card-title text-center mt-3 mb-3">{{maximumHR}}</h4>
                 </div>
               </div>
             </span>
@@ -115,9 +111,7 @@
               <div class="form-group">
                 <legend>Minimalna:</legend>
                 <div class="card text-white bg-info mt-3 mb-3" style="max-width: 16rem;">
-                  <div v-for="responseMinimumHr in minimumHR" id="btn4" class="card-body">
-                    <h4 class="card-title text-center">{{responseMinimumHr}}</h4>
-                  </div>
+                  <h4 class="card-title text-center mt-3 mb-3">{{minimumHR}}</h4>
                 </div>
               </div>
             </span>
@@ -126,9 +120,7 @@
               <div class="form-group">
                 <legend>Uśredniona:</legend>
                 <div class="card text-white bg-info mt-3 mb-3" style="max-width: 16rem;">
-                  <div v-for="responseAverageHr in averageHR" id="btn5" class="card-body">
-                    <h4 class="card-title text-center">{{responseAverageHr}}</h4>
-                  </div>
+                  <h4 class="card-title text-center mt-3 mb-3">{{averageHR}}</h4>
                 </div>
               </div>
             </span>
@@ -163,10 +155,10 @@ export default {
   },
   data() {
     return {
-      minimumHR: ['-'],
-      maximumHR: ['-'],
-      currentHR: ['-'],
-      averageHR: ['-'],
+      minimumHR: '-',
+      maximumHR: '-',
+      currentHR: '-',
+      averageHR: '-',
       patients: {},
       matType: null,
       patientId: null,
