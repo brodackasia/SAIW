@@ -12,6 +12,6 @@ class MatTypeConst
 
     public const ALL_TYPES = [
         self::BATHTUB,
-        self::CHAIR
+        self::CHAIR,
     ];
 }
