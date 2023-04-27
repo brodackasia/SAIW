@@ -37,7 +37,7 @@ class HRRepository
                 chair_measurements AS chm ON chm.host = h.hub
                     AND time AT TIME ZONE 'UTC-1' between :dateTimeFrom AND :dateTimeTo
             WHERE
-                    p.id = :patientId
+                p.id = :patientId
             ORDER BY
                 chm."time";
         SQL);
@@ -67,7 +67,7 @@ class HRRepository
                 bathtub_measurements AS bm ON bm.host = h.hub
                     AND time AT TIME ZONE 'UTC-1' between :dateTimeFrom AND :dateTimeTo
             WHERE
-                    p.id = :patientId
+                p.id = :patientId
             ORDER BY
                 bm."time";
         SQL);
@@ -97,7 +97,7 @@ class HRRepository
                 chair_measurements AS chm ON chm.host = h.hub
                     AND chm."time" >= NOW() AT TIME ZONE 'UTC-1' - INTERVAL '2 minutes'
             WHERE
-                    p.id = :patientId
+                p.id = :patientId
             ORDER BY
                 chm.id DESC
             LIMIT 1;
@@ -127,7 +127,7 @@ class HRRepository
                 bathtub_measurements AS bm ON bm.host = h.hub
                     AND bm."time" >= NOW() AT TIME ZONE 'UTC-1' - INTERVAL '2 minutes'
             WHERE
-                    p.id = :patientId
+                p.id = :patientId
             ORDER BY
                 bm.id DESC
             LIMIT 1;
@@ -158,7 +158,7 @@ class HRRepository
                 chair_measurements AS chm ON chm.host = h.hub
                     AND time AT TIME ZONE 'UTC-1' between :dateTimeFrom AND :dateTimeTo
             WHERE
-                    p.id = :patientId
+                p.id = :patientId
             ORDER BY
                 chm.hr
             LIMIT 1;
@@ -188,7 +188,7 @@ class HRRepository
                 bathtub_measurements AS bm ON bm.host = h.hub
                     AND time AT TIME ZONE 'UTC-1' between :dateTimeFrom AND :dateTimeTo
             WHERE
-                    p.id = :patientId
+                p.id = :patientId
             ORDER BY
                 bm.hr
             LIMIT 1;
@@ -219,7 +219,7 @@ class HRRepository
                 chair_measurements AS chm ON chm.host = h.hub
                     AND time AT TIME ZONE 'UTC-1' between :dateTimeFrom AND :dateTimeTo
             WHERE
-                    p.id = :patientId
+                p.id = :patientId
             ORDER BY
                 chm.hr DESC
             LIMIT 1;
@@ -249,7 +249,7 @@ class HRRepository
                 bathtub_measurements AS bm ON bm.host = h.hub
                     AND time AT TIME ZONE 'UTC-1' between :dateTimeFrom AND :dateTimeTo
             WHERE
-                    p.id = :patientId
+                p.id = :patientId
             ORDER BY
                 bm.hr DESC
             LIMIT 1;
@@ -280,7 +280,7 @@ class HRRepository
                 chair_measurements AS chm ON chm.host = h.hub
                     AND time AT TIME ZONE 'UTC-1' between :dateTimeFrom AND :dateTimeTo
             WHERE
-                    p.id = :patientId
+                p.id = :patientId
             LIMIT 1;
         SQL);
 
@@ -308,7 +308,7 @@ class HRRepository
                 bathtub_measurements AS bm ON bm.host = h.hub
                     AND time AT TIME ZONE 'UTC-1' between :dateTimeFrom AND :dateTimeTo
             WHERE
-                    p.id = :patientId
+                p.id = :patientId
             LIMIT 1;
         SQL);
 

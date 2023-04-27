@@ -73,7 +73,7 @@ class HrQuery
         return ([
             'patientId' => $query->getPatientId(),
             'dateTimeFrom' => $query->getFrom(),
-            'dateTimeTo' => $query->getTo()
+            'dateTimeTo' => $query->getTo(),
         ]);
     }
 
